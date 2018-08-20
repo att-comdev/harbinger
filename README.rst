@@ -1,5 +1,5 @@
 ===============================
-harbinger
+Harbinger
 ===============================
 
 Modular manager for Openstack data plane testing frameworks
@@ -10,10 +10,11 @@ standardized interfance and input format
 
 * Free software: Apache license
 * Documentation: https://docs.openstack.org/harbinger/latest
-* Source: https://git.openstack.org/cgit/openstack/harbinger* Bugs: https://bugs.launchpad.net/harbinger
+* Source: https://git.openstack.org/cgit/openstack/harbinger
+* Bugs: https://bugs.launchpad.net/harbinger
 
 --------
 
 * TODO
-unit tests
-docs
+* complete unit tests
+* complete documentation
