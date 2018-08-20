@@ -1,0 +1,35 @@
+Execute:
+  framework_1:
+    tests:
+      - test1
+      - test2
+    required:
+# The required section is to specify config/input items that are particular to a
+# framework but required for correct framework execution. They will be verified
+# by Harbinger before execution (fail fast)
+      - server_endpoint: 10.0.0.2
+    extras:
+# Some config fields will use common defaults but can be overriden. For example, if a
+# different flavor is to be used, the key: value can be added in the extas section
+      - flavor_name: myFlavor
+      - lavor_name: myFlavor
+      - avor_name: myFlavor
+      - vor_name: myFlavor
+
+  framework_2:
+    tests:
+      - test1
+      - test2
+    required:
+    extras:
+
+Environment:
+  OS_AUTH_URL: https://identity.openstack:5000/
+  OS_REGION_NAME: regionOne
+  OS_API_VERSION: v2
+  EXTERNAL_NETWORK: external_net
+
+Options:
+  username:
+  password:
+  project:

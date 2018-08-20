@@ -1,0 +1,63 @@
+name: Harbinger input schema
+type: map
+allowempty: True
+mapping:
+  Options:
+    type: map
+    allowempty: True
+    mapping:
+      project:
+        type: str
+        required: True
+      username:
+        type: str
+        required: True
+      password:
+        type: str
+        required: True
+      external_network:
+        type: str
+        required: True
+      execution_mode:
+        type: str
+        required: True
+
+  Execute:
+    type: map
+    matching-rule: 'any'
+    mapping:
+       regex;(.+):
+         type: map
+         mapping:
+           tests:
+             required: true
+             type: seq
+             sequence:
+               - type: str
+           required:
+             required: True
+             type: map
+             allowempty: True
+           extras:
+             type: map
+             allowempty: True
+           options_override:
+             type: map
+             allowempty: True
+           environment_overrides:
+             type: map
+             allowempty: True
+
+  Environment:
+    type: map
+    allowempty: True
+    mapping:
+      OS_AUTH_URL:
+        type: str
+        required: True
+      OS_REGION_NAME:
+        type: str
+        required: True
+      OS_API_VERSION:
+        type: str
+        required: True
