@@ -2,7 +2,7 @@ FROM bitnami/minideb:jessie
 
 LABEL maintainer "Oded Le'Sage <ol7435@att.com>"
 
-#add necessary environment variables
+# add necessary environment variables
 ENV HARBINGER_DIR /opt/harbinger
 
 # install system packages

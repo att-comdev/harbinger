@@ -64,7 +64,6 @@ class ShakerExecutor(BaseExecutor):
         project_name = Utils.hierarchy_lookup(self, 'project')
         flavor_name = Utils.hierarchy_lookup(self, 'flavor_name')
         image_name = Utils.hierarchy_lookup(self, 'image')
-        availability_zone = Utils.hierarchy_lookup(self, 'availability_zone')
         compute_node = Utils.hierarchy_lookup(self, 'compute_node')
         output = self.results_json_path
         scenario = self.collect_scenario_tests()
@@ -76,7 +75,6 @@ class ShakerExecutor(BaseExecutor):
         self.config.set("DEFAULT", "os_project_name", project_name)
         self.config.set("DEFAULT", "flavor_name", flavor_name)
         self.config.set("DEFAULT", "image_name", image_name)
-        self.config.set("DEFAULT", "availability_zone", availability_zone)
         self.config.set("DEFAULT", "compute_node", compute_node)
         self.config.set("DEFAULT", "output", output)
         self.config.set("DEFAULT", "scenario", scenario)
