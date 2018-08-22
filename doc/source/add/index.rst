@@ -11,9 +11,8 @@ First you must run the scaffold command *{ hints assume container directory stru
 **harbinger scaffold <new framework name>**
 
 Once this command is run it will
-..
 
-* add a framework section to harbinger.cfg *{ /opt/harbinger-src/etc/harbinger.cfg }*
+* add a framework section to harbinger.cfg *{ /opt/harbinger-src/harbinger/etc/harbinger.cfg }*
 * create framework directory *{ /opt/harbinger/frameworks/<framework> }*
 * create virtual environment directory *{ /opt/harbinger/venvs/<framework> }*
 * create framework executor file *{ /opt/harbinger-src/harbinger/executors/<framework>.py }*
