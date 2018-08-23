@@ -7,13 +7,8 @@ Modular manager for Openstack data plane testing frameworks
 Harbinger  allows execution of various Openstack data plane testing frameworks 
 while maintainting a single standardized interfance and input format
 
-To view the docs 
-
-* clone repo
-* tox -e docs
-* cd /doc/build/html
-* python -m SimpleHTTPServer
-* Browser - http://localhost:8000
+Documentation can be found at
+https://harbinger-dpm.readthedocs.io/en/latest/ 
 
 Supported Data Plane Testing Frameworks
 -----------------------------
