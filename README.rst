@@ -4,9 +4,8 @@ Harbinger
 
 Modular manager for Openstack data plane testing frameworks
 
-Harbinger is currently a work in progress. It allows execution of various
-Openstack data plane testing frameworks while maintainting a single
-standardized interfance and input format
+Harbinger  allows execution of various Openstack data plane testing frameworks 
+while maintainting a single standardized interfance and input format
 
 To view the docs 
 
@@ -15,6 +14,11 @@ To view the docs
 * cd /doc/build/html
 * python -m SimpleHTTPServer
 * Browser - http://localhost:8000
+
+Supported Data Plane Testing Frameworks
+-----------------------------
+* Shaker https://github.com/openstack/shaker
+* Yardstick https://github.com/opnfv/yardstick
 
 Links
 -----
