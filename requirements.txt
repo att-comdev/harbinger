@@ -12,3 +12,4 @@ oyaml>=0.5
 python-openstackclient>=3.15.0
 multiprocessing-logging>=0.2.6
 psutil>=5.4.6
+jinja2>=2.10

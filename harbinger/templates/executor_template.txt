@@ -1,0 +1,33 @@
+"""
+{{ class_name }} class:
+    - {{ class_name }} framework execution class
+"""
+from oslo_config import cfg
+from oslo_log import log as logging
+
+from harbinger.common.utils import Utils
+from harbinger.executors.base import BaseExecutor
+
+LOG = logging.getLogger(__name__)
+CONF = cfg.CONF
+
+class {{ class_name }}(BaseExecutor):
+    def __init__(self, framework, environment, options):
+        super({{ class_name }}, self).__init__(framework, environment, options)
+        pass
+
+    def setup(self):
+        super({{ class_name }}, self).setup()
+        pass
+
+    def collect_tests(self):
+        pass
+
+    def add_extra_options(self):
+        pass
+
+    def create_cfg_file(self):
+        pass
+
+    def create_image(self):
+        pass
