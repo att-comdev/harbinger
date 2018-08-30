@@ -8,7 +8,8 @@ import ConfigParser
 import os
 
 from harbinger import base
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
 from oslo_config import cfg
 from oslo_log import log as logging
 
@@ -91,4 +92,3 @@ class Scaffold(base.Base):
                  self.app_args.framework)
         with open(self.executor_path, 'w') as executor_file:
             executor_file.write(output)
-
