@@ -8,6 +8,7 @@ import ConfigParser
 import os
 
 from harbinger import base
+from jinja2 import Environment, FileSystemLoader
 from oslo_config import cfg
 from oslo_log import log as logging
 
@@ -44,10 +45,13 @@ class Scaffold(base.Base):
         self.config = ConfigParser.RawConfigParser()
         self.config.read(self.harbinger_cfg_path)
 
+        first_letter = parsed_args.framework[0].upper()
+        class_name = first_letter + parsed_args.framework[1:] + "Executor"
+
         self.add_framework_section()
         self.create_framework_directories()
         self.create_venv_directories()
-        self.create_executor_file()
+        self.create_executor_file(class_name)
 
     def add_framework_section(self):
         LOG.info('Adding harbinger.cfg %s section', self.app_args.framework)
@@ -57,11 +61,6 @@ class Scaffold(base.Base):
                 self.config.write(configfile)
         except Exception:
             LOG.warning("Section %s already exists", self.app_args.framework)
-
-    def create_executor_file(self):
-        LOG.info('Creating %s framework executor file',
-                 self.app_args.framework)
-        open(self.executor_path, 'a').close()
 
     def create_framework_directories(self):
         LOG.info('Creating framework directory %s', self.app_args.framework)
@@ -82,3 +81,14 @@ class Scaffold(base.Base):
             os.makedirs(full_path)
         except Exception:
             LOG.warning("Directory %s already exists", full_path)
+
+    def create_executor_file(self, class_name):
+        env = Environment(loader=FileSystemLoader('templates'))
+        template = env.get_template('executor_template.txt')
+        output = template.render(class_name=class_name)
+
+        LOG.info('Creating %s framework executor file',
+                 self.app_args.framework)
+        with open(self.executor_path, 'w') as executor_file:
+            executor_file.write(output)
+
