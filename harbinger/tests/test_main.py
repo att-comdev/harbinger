@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
+
 import mock
 
 from harbinger import main
@@ -19,6 +21,7 @@ from harbinger.tests import base
 
 
 class TestMain(base.TestCase):
+
     @mock.patch('harbinger.main.CommandManager')
     @mock.patch('harbinger.main.App.__init__', autospec=True)
     @mock.patch('harbinger.main.__version__', 'version')
@@ -60,3 +63,38 @@ class TestMain(base.TestCase):
         mock_main_class.return_value.run.assert_called_once_with(['first',
                                                                   'second',
                                                                   'third'])
+
+    def test_harbingeropts_success(self):
+        cfg = os.path.dirname(os.path.realpath(__file__)) + \
+            '/../etc/harbinger.cfg'
+        main.CONF.reset()
+        before = len(main.CONF)
+        main.harbingeropts(cfg)
+        after = len(main.CONF)
+        self.assertGreater(after, before)
+
+    def test_harbingeropts_failure(self):
+        cfg = os.path.dirname(os.path.realpath(__file__)) + \
+            '/../etc/error.cfg'
+        self.assertRaises(IOError, main.harbingeropts, cfg)
+
+    @mock.patch('harbinger.main.CommandManager')
+    def test_cleanup_noerr(self, mock_cmd):
+        main.Harbinger().clean_up(mock_cmd, 0, None)
+
+    @mock.patch('harbinger.main.CommandManager')
+    def test_cleanup_err(self, mock_cmd):
+        err = ValueError
+        main.Harbinger().clean_up(mock_cmd, 0, err)
+
+    @mock.patch('harbinger.main.CommandManager')
+    def test_prepare_to_run_command(self, mock_cmd):
+        main.Harbinger().prepare_to_run_command(mock_cmd)
+
+    def test_initialize_app(self):
+        main.Harbinger().initialize_app('')
+
+    def test_configure_logging(self):
+        sample = main.Harbinger()
+        sample.run(['verbose_level', '1'])
+        sample.configure_logging()
