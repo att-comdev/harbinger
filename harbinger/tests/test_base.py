@@ -24,7 +24,7 @@ class TestBase(unittest.TestCase):
         self.assertRaises(IOError, base.harbingeropts, '')
 
     def test_harbingeropts_success(self):
-        self.assertGreater(base.OPTS, 0)
+        self.assertGreater(len(base.OPTS), 0)
         original_opts = copy.deepcopy(base.OPTS)
         base.OPTS = []
         self.assertEqual(len(base.OPTS), 0)
