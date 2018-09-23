@@ -25,6 +25,7 @@ pip-log.txt
 harbinger.log
 
 # Unit test / coverage reports
+.idea
 cover/
 .coverage*
 !.coveragerc
