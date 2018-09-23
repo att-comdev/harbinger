@@ -25,6 +25,9 @@ class test_class(BaseExecutor):
 
     def add_extra_options(self):
         pass
+        
+    def format_collected_tests(self, collected_tests_list):
+        pass
 
     def format_collected_tests(self, collected_tests_list):
         pass
