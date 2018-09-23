@@ -105,7 +105,6 @@ class ColorLogFormatter(logging.Formatter):
         # This is the main method whereby the log
         # messages are colored to have a rainbow effect
         # ===============================================
-
         # provides a way to strip out color and log format for a "plain" entry
         if hasattr(record, 'plainOutput'):
             if record.plainOutput is True:
@@ -120,9 +119,8 @@ class ColorLogFormatter(logging.Formatter):
             record.message = self.colored(record.getMessage(), color)
             record.msg = self.colored(record.msg, color)
 
-        message = super(ColorLogFormatter, self).format(record)
-
         exc_info = self._get_exc_info(record)
+        message = super(ColorLogFormatter, self).format(record)
         if exc_info is not None:
             if message[-1:] != "\n":
                 message = message + "\n\n"
@@ -151,7 +149,7 @@ class ColorLogFormatter(logging.Formatter):
         # --------------------------------------------------------
         # ==========================================================
         if os.getenv('ANSI_COLORS_DISABLED') is None:
-            fmt_str = '\033[%dm%s'
+            fmt_str = u'\033[%dm%s'
             if color is not None:
                 text = fmt_str % (COLORS[color], text)
 

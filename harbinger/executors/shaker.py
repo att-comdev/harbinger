@@ -23,7 +23,8 @@ class ShakerExecutor(BaseExecutor):
         self.results_json_path = os.path.join(self.outputs_dir,
                                               "shaker-results.json")
         self.collected_tests_list = self.collect_tests()
-        self.collected_tests_string = self.format_collected_tests(self.collected_tests_list)
+        self.collected_tests_string = self.format_collected_tests(
+            self.collected_tests_list)
         self.config = ConfigParser.RawConfigParser()
 
     def setup(self):

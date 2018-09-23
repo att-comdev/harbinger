@@ -25,7 +25,8 @@ class BaseExecutor(object):
         self.environment = environment
         self.options = options
         self.relative_path = os.path.join(
-            CONF.DEFAULT.files_dir, "frameworks", self.framework.name, CONF.shaker.test_paths)
+            CONF.DEFAULT.files_dir, "frameworks",
+            self.framework.name, CONF.shaker.test_paths)
 
         self.image = ImageManager(self.framework.name,
                                   self.environment.OS_AUTH_URL +
@@ -102,10 +103,11 @@ class BaseExecutor(object):
 
     def walk_directory(self, directory):
         tests_list = []
-        for dir_name, subdir_list, file_list in os.walk(directory, topdown=False):
+        for dir_name, subdir_list, file_list in os.walk(directory,
+                                                        topdown=False):
             for file_name in file_list:
                 if file_name.endswith(CONF.shaker.tests_format):
-                    tests_list.append(os.path.join(dir_name, file))
+                    tests_list.append(os.path.join(dir_name, file_name))
         return tests_list
 
     def collect_tests(self):
@@ -140,7 +142,9 @@ class BaseExecutor(object):
                 bad_tests_list.append(test)
 
         if len(bad_tests_list) > 0:
-            raise RuntimeError('There are one or more tests, test paths, or directories that do not exist or have'
-                               ' invalid extensions. %s' % bad_tests_list)
+            raise RuntimeError(
+                'There are one or more tests, test paths, '
+                'or directories that do not exist or have'
+                ' invalid extensions. %s' % bad_tests_list)
 
         return tests_list
