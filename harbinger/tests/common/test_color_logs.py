@@ -14,10 +14,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import os
 import logging
-import time
-import sys
+import os
 import unittest
 import uuid
 
@@ -63,10 +61,16 @@ class ColorLogFormatterTest(unittest.TestCase):
 
         # We will zero out exc_text to test the condition
         setattr(l.records[0], "exc_text", None)
+
+        # TODO(lamt): We should add in additional asserts for better
+        # testing of this test scenario.
         self.assertIn(message, self.formatter.format(l.records[0]))
 
-        # # Test unicode errors
+        # Test unicode errors
         setattr(l.records[0], "exc_text", "caf仪")
+
+        # TODO(lamt): We should add in additional asserts for better
+        # testing of this test scenario.
         self.assertIn(message, self.formatter.format(l.records[0]))
 
     def test_colored_with_ansi_coloring_enabled(self):
