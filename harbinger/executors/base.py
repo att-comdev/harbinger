@@ -8,6 +8,7 @@ import os
 import shlex
 import subprocess
 
+from harbinger.common.utils import Utils
 from harbinger.flavors.flavor_manager import FlavorManager
 from harbinger.images.image_manager import ImageManager
 from oslo_config import cfg
@@ -26,7 +27,7 @@ class BaseExecutor(object):
         self.options = options
         self.relative_path = os.path.join(
             CONF.DEFAULT.files_dir, "frameworks",
-            self.framework.name, CONF.shaker.test_paths)
+            self.framework.name, Utils.hierarchy_lookup(self, "test_paths"))
 
         self.image = ImageManager(self.framework.name,
                                   self.environment.OS_AUTH_URL +
@@ -102,49 +103,49 @@ class BaseExecutor(object):
                 command, return_code))
 
     def walk_directory(self, directory):
-        tests_list = []
+        test_list = []
         for dir_name, subdir_list, file_list in os.walk(directory,
                                                         topdown=False):
             for file_name in file_list:
                 if file_name.endswith(CONF.shaker.tests_format):
-                    tests_list.append(os.path.join(dir_name, file_name))
-        return tests_list
+                    test_list.append(os.path.join(dir_name, file_name))
+        return test_list
 
     def collect_tests(self):
         framework_tests = self.framework.tests
-        tests_list = []
-        bad_tests_list = []
+        test_list = []
+        bad_test_list = []
 
         for test in framework_tests:
             if test == "*":
-                tests_list += self.walk_directory(self.relative_path)
+                test_list += self.walk_directory(self.relative_path)
             elif os.path.isabs(test) and os.path.exists(test):
                 if os.path.isdir(test):
-                    tests_list += self.walk_directory(test)
+                    test_list += self.walk_directory(test)
                 elif test.endswith(CONF.shaker.tests_format):
-                    tests_list.append(test)
+                    test_list.append(test)
                 else:
-                    bad_tests_list.append(test)
+                    bad_test_list.append(test)
 
             elif not os.path.isabs(test):
                 relative_test = self.relative_path + test
                 if os.path.exists(relative_test):
                     if os.path.isdir(relative_test):
-                        tests_list += self.walk_directory(relative_test)
+                        test_list += self.walk_directory(relative_test)
                     elif test.endswith(CONF.shaker.tests_format):
-                        tests_list.append(relative_test)
+                        test_list.append(relative_test)
                     else:
-                        bad_tests_list.append(test)
+                        bad_test_list.append(test)
                 else:
-                    bad_tests_list.append(test)
+                    bad_test_list.append(test)
 
             else:
-                bad_tests_list.append(test)
+                bad_test_list.append(test)
 
-        if len(bad_tests_list) > 0:
+        if len(bad_test_list) > 0:
             raise RuntimeError(
                 'There are one or more tests, test paths, '
                 'or directories that do not exist or have'
-                ' invalid extensions. %s' % bad_tests_list)
+                ' invalid extensions. %s' % bad_test_list)
 
-        return tests_list
+        return test_list

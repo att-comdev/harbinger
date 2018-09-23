@@ -23,7 +23,7 @@ class ShakerExecutor(BaseExecutor):
         self.results_json_path = os.path.join(self.outputs_dir,
                                               "shaker-results.json")
         self.collected_tests_list = self.collect_tests()
-        self.collected_tests_string = self.format_collected_tests(
+        self.formated_tests = self.format_collected_tests(
             self.collected_tests_list)
         self.config = ConfigParser.RawConfigParser()
 
@@ -60,7 +60,7 @@ class ShakerExecutor(BaseExecutor):
         flavor_name = Utils.hierarchy_lookup(self, 'flavor_name')
         image_name = Utils.hierarchy_lookup(self, 'image')
         output = self.results_json_path
-        scenario = self.collected_tests_string
+        scenario = self.formated_tests
         server_endpoint = Utils.hierarchy_lookup(self, 'server_endpoint')
         external_net = Utils.hierarchy_lookup(self, 'external_network')
 

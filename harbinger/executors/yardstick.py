@@ -29,6 +29,11 @@ class YardstickExecutor(BaseExecutor):
                                               "yardstick.out")
         self.conf_full_path = os.path.join(self.inputs_path,
                                            self.conf_file_name)
+
+        self.collected_tests_list = self.collect_tests()
+        self.formated_tests = self.format_collected_tests(
+            self.collected_tests_list)
+
         self.test_paths = os.path.join(CONF[self.framework.name].test_paths)
         self.test_suite_name = "yardstick-suite.yaml"
 
@@ -56,8 +61,7 @@ class YardstickExecutor(BaseExecutor):
 
         self.create_yardstick_conf()
 
-        test_list = self.collect_tests()
-        self.create_test_suite(test_list)
+        self.create_test_suite(self.formated_tests)
 
         # set additional environment variables necessary for openstack api
         Utils.source_openrc(self)
@@ -71,11 +75,10 @@ class YardstickExecutor(BaseExecutor):
 
         self._exec_cmd(run_command)
 
-    def collect_tests(self):
-        tests_list = self.framework.tests
+    def format_collected_tests(self, collected_tests_list):
         suite = []
-        for test in tests_list:
-            test_dict = {'file_name': test}
+        for test in collected_tests_list:
+            test_dict = {'file_name': test[1:]}
             suite.append(test_dict)
 
         return suite
