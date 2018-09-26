@@ -30,48 +30,48 @@ class ColorLogFormatterTest(unittest.TestCase):
         self.formatter = color_logs.ColorLogFormatter()
 
     @log_capture()
-    def test_format(self, l):
+    def test_format(self, capture):
         message = "Testing message %s." % uuid.uuid4().hex
         logger = logging.getLogger()
         logger.info(message)
 
-        self.assertNotEqual(message, self.formatter.format(l.records[0]))
-        self.assertIn(message, self.formatter.format(l.records[0]))
+        self.assertNotEqual(message, self.formatter.format(capture.records[0]))
+        self.assertIn(message, self.formatter.format(capture.records[0]))
 
     @log_capture()
-    def test_format_plain_output(self, l):
+    def test_format_plain_output(self, capture):
         message = "Testing message %s." % uuid.uuid4().hex
         logger = logging.getLogger()
         logger.info(message)
 
-        setattr(l.records[0], "plainOutput", True)
+        setattr(capture.records[0], "plainOutput", True)
         # FIXME(lamt): There is a bug where this plain output does not work
         # properly, once that is fixed we should be replacing assertIn with
         # assertEqual as that's the correct thing here.
-        self.assertIn(message, self.formatter.format(l.records[0]))
+        self.assertIn(message, self.formatter.format(capture.records[0]))
 
     @log_capture()
-    def test_format_with_exception(self, l):
+    def test_format_with_exception(self, capture):
         message = "Testing exception with non ascii char"
         logger = logging.getLogger()
         try:
             raise ValueError(message)
-        except ValueError as e:
-            logger.exception(e, exc_info=True)
+        except ValueError as err:
+            logger.exception(err, exc_info=True)
 
         # We will zero out exc_text to test the condition
-        setattr(l.records[0], "exc_text", None)
+        setattr(capture.records[0], "exc_text", None)
 
         # TODO(lamt): We should add in additional asserts for better
         # testing of this test scenario.
-        self.assertIn(message, self.formatter.format(l.records[0]))
+        self.assertIn(message, self.formatter.format(capture.records[0]))
 
         # Test unicode errors
-        setattr(l.records[0], "exc_text", "caf仪")
+        setattr(capture.records[0], "exc_text", "caf仪")
 
         # TODO(lamt): We should add in additional asserts for better
         # testing of this test scenario.
-        self.assertIn(message, self.formatter.format(l.records[0]))
+        self.assertIn(message, self.formatter.format(capture.records[0]))
 
     def test_colored_with_ansi_coloring_enabled(self):
         text = uuid.uuid4().hex
