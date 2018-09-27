@@ -29,6 +29,33 @@ class TestDirectoryManager(unittest.TestCase):
         mock_os.makedirs.assert_has_calls(calls)
 
     @mock.patch('harbinger.common.directory_manager.os', autospec=True)
+    def test_setup_bad_dirs(self, mock_os):
+        mock_os.makedirs.side_effect = OSError
+
+        self.test_object.setup()
+
+        self.assertRaises(OSError)
+
+    @mock.patch('harbinger.common.directory_manager.os', autospec=True)
     def test_archive_outputs(self, mock_os):
         self.test_object.setup()
-        self.test_object.archive_outputs()
+
+        mock_os.walk.return_value = [
+            ('.', ['dir1'], ['file1'])
+        ]
+
+        with mock.patch("__builtin__.open",
+                        mock.mock_open(read_data="data")) as mock_file:
+            self.test_object.archive_outputs()
+            self.assertEqual(open("path/to/open").read(), "data")
+            mock_file.assert_called_with("path/to/open")
+
+    @mock.patch('harbinger.common.directory_manager.os', autospec=True)
+    def test_archive_outputs_bad(self, mock_os):
+        self.test_object.setup()
+
+        mock_os.walk.return_value = []
+
+        with mock.patch("__builtin__.open") as mock_file:
+            self.test_object.archive_outputs()
+            mock_file.assert_not_called()
