@@ -104,8 +104,3 @@ class TestMain(base.TestCase):
 
     def test_initialize_app(self):
         main.Harbinger().initialize_app('')
-
-    def test_configure_logging(self):
-        sample = main.Harbinger()
-        sample.run(['verbose_level', '1'])
-        sample.configure_logging()
