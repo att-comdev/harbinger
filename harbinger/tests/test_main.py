@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 import os
+from testfixtures import LogCapture
 
 import mock
 
@@ -80,12 +81,22 @@ class TestMain(base.TestCase):
 
     @mock.patch('harbinger.main.CommandManager')
     def test_cleanup_noerr(self, mock_cmd):
-        main.Harbinger().clean_up(mock_cmd, 0, None)
+        with LogCapture() as capture:
+            main.Harbinger().clean_up(mock_cmd, 0, None)
+            capture.check(
+                # mock_cmd.__class__.__name__ will be 'MagicMock'
+                ('harbinger.main', 'DEBUG', 'Cleaning Up MagicMock'),
+            )
 
     @mock.patch('harbinger.main.CommandManager')
     def test_cleanup_err(self, mock_cmd):
-        err = ValueError
-        main.Harbinger().clean_up(mock_cmd, 0, err)
+        with LogCapture() as capture:
+            main.Harbinger().clean_up(mock_cmd, 0, 'test err')
+            capture.check(
+                # mock_cmd.__class__.__name__ will be 'MagicMock'
+                ('harbinger.main', 'DEBUG', 'Cleaning Up MagicMock'),
+                ('harbinger.main', 'ERROR', 'Encountered Error: test err'),
+            )
 
     @mock.patch('harbinger.main.CommandManager')
     def test_prepare_to_run_command(self, mock_cmd):

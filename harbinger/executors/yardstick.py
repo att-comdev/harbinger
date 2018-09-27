@@ -5,10 +5,11 @@ YardsstickExecutor class:
 import collections
 import ConfigParser
 import os
-import oyaml as yaml
+import tempfile
 
 from oslo_config import cfg
 from oslo_log import log as logging
+import oyaml as yaml
 
 from harbinger.common.utils import Utils
 from harbinger.executors.base import BaseExecutor
@@ -49,8 +50,9 @@ class YardstickExecutor(BaseExecutor):
 
         if image_exists is False:
             self.create_image()
+            temp_dir = tempfile.gettempdir()
             self.image.upload_image(image_name, 'qcow2', 'bare',
-                                    '/tmp/workspace/yardstick/')
+                                    temp_dir + '/workspace/yardstick/')
 
         self.create_yardstick_conf()
 

@@ -17,7 +17,9 @@ class Utils(object):
         E.g.: load_class("package.module.class").
 
         """
-        assert dottedpath is not None, "dottedpath must not be None"
+        if not dottedpath:
+            raise ValueError("dottedpath must not be None")
+
         splitted_path = dottedpath.split('.')
         modulename = '.'.join(splitted_path[:-1])
         classname = splitted_path[-1]

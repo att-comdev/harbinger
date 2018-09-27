@@ -84,7 +84,8 @@ class Scaffold(base.Base):
             LOG.warning("Directory %s already exists", full_path)
 
     def create_executor_file(self, class_name):
-        env = Environment(loader=FileSystemLoader('templates'))
+        env = Environment(loader=FileSystemLoader('templates'),
+                          autoescape=True)
         template = env.get_template('executor_template.txt')
         output = template.render(class_name=class_name)
 
