@@ -49,7 +49,7 @@ class ListTests(base.Base):
         result = []
 
         for path in test_paths:
-            result = [x[0] for x in os.walk(
+            result += [x[0] for x in os.walk(
                 os.path.join(CONF.DEFAULT.files_dir, "frameworks",
                              self.app_args.framework, path))]
 
