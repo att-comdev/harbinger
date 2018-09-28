@@ -65,7 +65,7 @@ class RemoveScaffold(base.Base):
         try:
             os.remove(self.executor_path)
         except Exception:
-            LOG.warning('File %s does not exists', self.executor_path)
+            LOG.warning('File %s does not exist', self.executor_path)
 
     def delete_framework_directories(self):
         LOG.info('Deleting framework directory %s', self.app_args.framework)
@@ -74,7 +74,7 @@ class RemoveScaffold(base.Base):
         try:
             shutil.rmtree(full_path)
         except Exception:
-            LOG.warning("Directory %s does not exists", full_path)
+            LOG.warning("Directory %s does not exist", full_path)
 
     def delete_venv_directories(self):
         LOG.info('Deleting venvs directory %s', self.app_args.framework)
@@ -83,4 +83,4 @@ class RemoveScaffold(base.Base):
         try:
             shutil.rmtree(full_path)
         except Exception:
-            LOG.warning("Directory %s does not exists", full_path)
+            LOG.warning("Directory %s does not exist", full_path)
