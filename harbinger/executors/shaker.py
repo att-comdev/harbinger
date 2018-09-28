@@ -22,11 +22,13 @@ class ShakerExecutor(BaseExecutor):
         self.cfg_full_path = os.path.join(self.inputs_dir, self.cfg_file_name)
         self.results_json_path = os.path.join(self.outputs_dir,
                                               "shaker-results.json")
+        self.collected_tests_list = self.collect_tests()
+        self.collected_tests_string = self.format_collected_tests(
+            self.collected_tests_list)
         self.config = ConfigParser.RawConfigParser()
 
     def setup(self):
         super(ShakerExecutor, self).setup()
-
         image_name = Utils.hierarchy_lookup(self, 'image')
         image_exists = self.image.check_image(image_name)
 
@@ -37,23 +39,16 @@ class ShakerExecutor(BaseExecutor):
         self.create_cfg_file()
         self._exec_cmd("shaker --config-file " + self.cfg_full_path)
 
-    def collect_scenario_tests(self):
-        tests_list = self.framework.tests
-        scenario = ""
-        for i, test in enumerate(tests_list):
-            path = os.path.join(CONF.DEFAULT.files_dir, "frameworks",
-                                self.framework.name,
-                                CONF.shaker.test_paths, test)
-            if i + 1 == len(tests_list):
-                scenario += path
-            else:
-                scenario += path + ", "
-
-        return scenario
-
     def add_extras_options(self):
         for key, value in self.framework.extras.iteritems():
             self.config.set("DEFAULT", str(key), value)
+
+    def format_collected_tests(self, collected_tests_list):
+        collected_tests_string = ""
+        for test in collected_tests_list:
+            collected_tests_string += test + ", "
+
+        return collected_tests_string
 
     def create_cfg_file(self):
         if hasattr(self.framework, 'extras'):
@@ -65,7 +60,7 @@ class ShakerExecutor(BaseExecutor):
         flavor_name = Utils.hierarchy_lookup(self, 'flavor_name')
         image_name = Utils.hierarchy_lookup(self, 'image')
         output = self.results_json_path
-        scenario = self.collect_scenario_tests()
+        scenario = self.collected_tests_string
         server_endpoint = Utils.hierarchy_lookup(self, 'server_endpoint')
         external_net = Utils.hierarchy_lookup(self, 'external_network')
 
