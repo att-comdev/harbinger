@@ -25,7 +25,7 @@ class TestFrameworkExtractor(unittest.TestCase):
 
         self.test_object = FrameworkExtractor()
 
-    def test_parse_framework(self):
+    def test_parse_frameworks(self):
         self.framework_dict = self.test_object.parse_frameworks(self.yaml_file)
         self.assertIn("framework_1", self.framework_dict)
         self.assertIn("framework_2", self.framework_dict)
