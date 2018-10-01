@@ -1,5 +1,4 @@
 import argparse
-import sys
 import unittest
 
 import mock
@@ -12,9 +11,9 @@ from harbinger.list_tests import ListTests
 class TestListTests(unittest.TestCase):
 
     def setUp(self):
-        args = mock.Mock(spec=argparse.Namespace)
-        args.framework = 'test_framework'
-        self.test_object = ListTests(app=mock.Mock(), app_args=args)
+        self.args = mock.Mock(spec=argparse.Namespace)
+        self.args.framework = 'test_framework'
+        self.test_object = ListTests(app=mock.Mock(), app_args=self.args)
 
     def test_get_description(self):
         expected = "lists the tests for the framework provided"
@@ -97,79 +96,49 @@ class TestListTests(unittest.TestCase):
                                "+-------------------+\n"
                                "+-------------------+")
 
-        args = mock.Mock(spec=argparse.Namespace)
-        test_object = ListTestsStub(app=mock.Mock(), app_args=args)
-        test_paths = ['long_path_even_len', 'short_odd', 'short_even']
         expected = [long_even_expected,
                     short_odd_expected1,
                     short_even_expected1]
-        test_object.set_test_paths(test_paths)
-        actuals = test_object.setup_tables()
+        self.test_object.test_paths = ['long_path_even_len',
+                                       'short_odd', 'short_even']
+        actuals = self.test_object.setup_tables()
         for actual, expected in zip(actuals, expected):
             self.assertEqual(str(actual), expected)
 
-        test_paths[0] = 'long_path_odd_len'
         expected = [long_odd_expected,
                     short_odd_expected2,
                     short_even_expected2]
-        test_object.set_test_paths(test_paths)
-        actuals = test_object.setup_tables()
+        self.test_object.test_paths = ['long_path_odd_len',
+                                       'short_odd', 'short_even']
+        actuals = self.test_object.setup_tables()
         for actual, expected in zip(actuals, expected):
             self.assertEqual(str(actual), expected)
 
     @log_capture()
+    @mock.patch('sys.stdout', autospec=True)
     @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
-    def test_list_framework_tests(self, mock_isdir, mock_listdir, capture):
-        args = mock.Mock(spec=argparse.Namespace)
-        test_object = ListTestsStub(app=mock.Mock(), app_args=args)
+    def test_list_framework_tests(self, mock_isdir, mock_listdir,
+                                  mock_print, capture):
         mock_isdir.side_effect = [True, False]
         mock_listdir.return_value = ['test_filename']
-        test_paths = ['first_test_path', 'second_test_path']
-        test_object.set_test_paths(test_paths)
-        test_object.set_tests_format('filename')
-        test_object.set_test_tables([PrettyTable([])])
-        expected = ("+---------------+\n"
-                    "|    Field 1    |\n"
-                    "+---------------+\n"
-                    "| test_filename |\n"
-                    "+---------------+\n")
+        self.test_object.test_paths = ['first_test_path', 'second_test_path']
+        self.test_object.tests_format = 'filename'
+        self.test_object.test_tables = [PrettyTable([])]
 
-        # The following class and subsequent manipulations are
-        # intended to check what is being put on stdout
-        class StdoutMock(object):
-            def __init__(self):
-                self.data = []
+        self.test_object.list_framework_tests()
 
-            def write(self, data):
-                self.data.append(data)
+        calls = [
+            mock.call.write("+---------------+\n"
+                            "|    Field 1    |\n"
+                            "+---------------+\n"
+                            "| test_filename |\n"
+                            "+---------------+"),
+        ]
+        mock_print.assert_has_calls(calls)
 
-            def __str__(self):
-                return "".join(self.data)
-
-        orig_stdout = sys.stdout
-        actual = StdoutMock()
-        try:
-            sys.stdout = actual
-            test_object.list_framework_tests()
-        finally:
-            sys.stdout = orig_stdout
-            actual = str(actual)
-
-        self.assertEqual(actual, expected)
         capture.check(
             ('harbinger.list_tests', 'ERROR',
              "tests path second_test_path does not exist. framework "
              "provided may not be a supported framework."),
         )
-
-
-class ListTestsStub(ListTests):
-    def set_test_paths(self, test_paths):
-        self.test_paths = test_paths
-
-    def set_tests_format(self, tests_format):
-        self.tests_format = tests_format
-
-    def set_test_tables(self, test_tables):
-        self.test_tables = test_tables
