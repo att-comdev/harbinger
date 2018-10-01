@@ -8,7 +8,7 @@ from harbinger.base import Base
 from harbinger.factory.framework import Framework
 
 
-class TestEnvironment(unittest.TestCase):
+class TestFramework(unittest.TestCase):
     """Unit tests for Framework"""
 
     def setUp(self):
