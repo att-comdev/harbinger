@@ -30,6 +30,6 @@ Environment:
   EXTERNAL_NETWORK: external_net
 
 Options:
-  username:
-  password:
-  project:
+  username: user
+  password: password
+  project: myTestProject
