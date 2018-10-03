@@ -70,7 +70,7 @@ class BaseExecutor(object):
         native approach for creating images
 
         """
-        pass
+        raise NotImplementedError()
 
     def _exec_cmd(self, command):
         LOG.info('Executing {%s}:\n', command)
