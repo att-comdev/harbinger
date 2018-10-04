@@ -2,6 +2,7 @@ import unittest
 
 import mock
 
+from harbinger.common.utils import Utils
 from harbinger.executors.shaker import ShakerExecutor
 
 
@@ -21,16 +22,19 @@ class TestShakerExecutor(unittest.TestCase):
         with mock.patch('harbinger.executors.base.CONF') as mock_conf:
             mock_conf.DEFAULT.files_dir = 'test_files_dir'
 
-            with mock.patch.object(ShakerExecutor, 'format_collected_tests'):
-                with mock.patch.object(ShakerExecutor, 'collect_tests'):
-                    test_object = ShakerExecutor(
-                        self.mock_framework,
-                        self.mock_environment,
-                        self.mock_options
-                    )
-            test_object.image = mock.Mock()
-            test_object.config = mock.Mock()
-            return test_object
+            with mock.patch.object(Utils, 'hierarchy_lookup') as mock_lookup:
+                mock_lookup.return_value = 'foo'
+                with mock.patch.object(ShakerExecutor,
+                                       'format_collected_tests'):
+                    with mock.patch.object(ShakerExecutor, 'collect_tests'):
+                        test_object = ShakerExecutor(
+                            self.mock_framework,
+                            self.mock_environment,
+                            self.mock_options
+                        )
+        test_object.image = mock.Mock()
+        test_object.config = mock.Mock()
+        return test_object
 
     def test___init__(self):
         test_object = self._get_test_object()
@@ -102,7 +106,7 @@ class TestShakerExecutor(unittest.TestCase):
     def test_create_cfg_file(self, mock_add_extras_options):
         test_object = self._get_test_object()
         test_object.results_json_path = "test_output"
-        test_object.collected_tests_string = "test_scenario"
+        test_object.formated_tests = "test_scenario"
 
         def mock_hierarchy_lookup(obj, attr):
             # pylint: disable=unused-argument
