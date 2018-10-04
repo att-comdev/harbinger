@@ -5,6 +5,7 @@ import unittest
 import mock
 from testfixtures import log_capture
 
+from harbinger.common.utils import Utils
 from harbinger.executors.base import BaseExecutor
 
 
@@ -23,14 +24,15 @@ class TestBaseExecutor(unittest.TestCase):
     def _get_test_object(self):
         with mock.patch('harbinger.executors.base.CONF') as mock_conf:
             mock_conf.DEFAULT.files_dir = 'test_files_dir'
-            mock_conf.shaker.test_paths = 'test_paths'
-            with mock.patch('harbinger.executors.base.ImageManager'):
+            with mock.patch.object(Utils, 'hierarchy_lookup') as mock_lookup:
+                mock_lookup.return_value = 'test_paths'
                 with mock.patch('harbinger.executors.base.FlavorManager'):
-                    test_object = BaseExecutor(
-                        self.mock_framework,
-                        self.mock_environment,
-                        self.mock_options
-                    )
+                    with mock.patch('harbinger.executors.base.ImageManager'):
+                        test_object = BaseExecutor(
+                            self.mock_framework,
+                            self.mock_environment,
+                            self.mock_options
+                        )
             return test_object
 
     def test___init__(self):
