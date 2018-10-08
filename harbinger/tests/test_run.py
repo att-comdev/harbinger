@@ -154,7 +154,12 @@ class TestRun(unittest.TestCase):
         child1.kill.assert_called_once()
         child2.kill.assert_not_called()
         parent.kill.assert_called_once()
-        capture.check( ('harbinger.run', 'ERROR', 'signal: 3 frame: 4'), ('harbinger.run', 'ERROR', 'exiting child: 1'), ('harbinger.run', 'ERROR', 'exiting parent: 5'), ('harbinger.run', 'ERROR', 'exiting all: 2'),)
+        capture.check(
+            ('harbinger.run', 'ERROR', 'signal: 3 frame: 4'),
+            ('harbinger.run', 'ERROR', 'exiting child: 1'),
+            ('harbinger.run', 'ERROR', 'exiting parent: 5'),
+            ('harbinger.run', 'ERROR', 'exiting all: 2'),
+        )
 
     @mock.patch('harbinger.run.multiprocessing')
     @mock.patch('harbinger.run.loader')
