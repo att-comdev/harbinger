@@ -13,9 +13,10 @@
 # limitations under the License.
 #
 import os
-from testfixtures import LogCapture
 
+import logging as consoleLogging
 import mock
+from testfixtures import LogCapture
 
 from harbinger import main
 from harbinger.tests import base
@@ -104,3 +105,19 @@ class TestMain(base.TestCase):
 
     def test_initialize_app(self):
         main.Harbinger().initialize_app('')
+
+    @mock.patch.object(main.Harbinger, 'run')
+    def test_configure_logging(self, mock_run):
+        harbinger = main.Harbinger()
+
+        # This is a hack...
+        def run(self, options):
+            self.options = mock.Mock()
+            self.options.verbose_level = options
+
+        mock_run.side_effect = run
+        harbinger.run(harbinger, 2)  # pylint: disable=too-many-function-args
+        harbinger.configure_logging()
+        root_logger = consoleLogging.getLogger('')
+        self.assertEqual(root_logger.handlers[1].level, consoleLogging.DEBUG)
+        pass

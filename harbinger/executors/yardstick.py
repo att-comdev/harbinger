@@ -23,11 +23,9 @@ class YardstickExecutor(BaseExecutor):
         super(YardstickExecutor, self).__init__(framework, environment,
                                                 options)
         self.conf_file_name = self.framework.name + ".conf"
-        self.inputs_path = os.path.join(CONF.DEFAULT.files_dir, "inputs")
-        self.outputs_path = os.path.join(CONF.DEFAULT.files_dir, "outputs")
-        self.outputs_full_path = os.path.join(self.outputs_path,
+        self.outputs_full_path = os.path.join(self.outputs_dir,
                                               "yardstick.out")
-        self.conf_full_path = os.path.join(self.inputs_path,
+        self.conf_full_path = os.path.join(self.inputs_dir,
                                            self.conf_file_name)
 
         self.collected_tests_list = self.collect_tests()
@@ -70,7 +68,7 @@ class YardstickExecutor(BaseExecutor):
         run_command += " task start"
         run_command += " --output-file " + str(self.outputs_full_path)
         run_command += " --suite " + \
-                       str(os.path.join(self.inputs_path,
+                       str(os.path.join(self.inputs_dir,
                                         self.test_suite_name))
 
         self._exec_cmd(run_command)
@@ -100,7 +98,7 @@ class YardstickExecutor(BaseExecutor):
 
         file_contents = yaml.dump(test_suite_yaml, default_flow_style=False)
 
-        with open(os.path.join(self.inputs_path,
+        with open(os.path.join(self.inputs_dir,
                                self.test_suite_name), 'w') as yaml_file:
             yaml_file.write(file_contents)
 
@@ -117,7 +115,7 @@ class YardstickExecutor(BaseExecutor):
             dispatcher = Utils.hierarchy_lookup(self, "dispatcher")
             dispatch_file = Utils.hierarchy_lookup(self,
                                                    "dispatcher_file_name")
-            dispatch_file = os.path.join(self.outputs_path, dispatch_file)
+            dispatch_file = os.path.join(self.outputs_dir, dispatch_file)
 
             self.config.set("DEFAULT", "debug", debug)
             self.config.set("DEFAULT", "dispatcher", dispatcher)
