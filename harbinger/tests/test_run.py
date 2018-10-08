@@ -1,7 +1,9 @@
 import argparse
+import signal
 import unittest
 
 import mock
+from testfixtures import log_capture
 
 from harbinger.run import loader
 from harbinger.run import Run
@@ -131,25 +133,33 @@ class TestRun(unittest.TestCase):
             'harbinger.executors.test.TestExecutor'
         )
 
-    @mock.patch('harbinger.run.os.getpid')
+    @log_capture()
     @mock.patch('harbinger.run.Process')
-    @mock.patch('harbinger.run.signal.signal')
-    def test_worker_init(self, mock_signal, mock_process, mock_getpid):
+    def test_worker_init(self, mock_process, capture):
         parent = mock.Mock()
         child1 = mock.Mock()
         child2 = mock.Mock()
         child1.pid = 1
         child2.pid = 2
-        mock_getpid.return_value = 2
         parent.children.return_value = [child1, child2]
-        mock_process.return_value = parent
+        mock_process.side_effect = [parent, mock.Mock()]
+        self.addCleanup(signal.signal, signal.SIGINT,
+                        signal.getsignal(signal.SIGINT))
         # all of the following numbers are arbitrary
-        mock_signal.side_effect = lambda a, b: b(3, 4)
-        worker_init(5)
+        with mock.patch('harbinger.run.signal.signal') as mock_signal:
+            mock_signal.side_effect = lambda a, b: b(3, 4)
+            with mock.patch('harbinger.run.os.getpid') as mock_getpid:
+                mock_getpid.return_value = 2
+                worker_init(5)
         child1.kill.assert_called_once()
         child2.kill.assert_not_called()
-        parent.kill.assert_called()
-        mock_getpid.assert_called()
+        parent.kill.assert_called_once()
+        capture.check(
+            ('harbinger.run', 'ERROR', 'signal: 3 frame: 4'),
+            ('harbinger.run', 'ERROR', 'exiting child: 1'),
+            ('harbinger.run', 'ERROR', 'exiting parent: 5'),
+            ('harbinger.run', 'ERROR', 'exiting all: 2'),
+        )
 
     @mock.patch('harbinger.run.multiprocessing')
     @mock.patch('harbinger.run.loader')
@@ -158,15 +168,19 @@ class TestRun(unittest.TestCase):
         mock_loader.assert_called()
         mock_multiprocessing.current_process.assert_called()
 
+    @log_capture()
     @mock.patch('harbinger.run.traceback')
-    @mock.patch('harbinger.run.StringIO')
-    @mock.patch('harbinger.run.multiprocessing')
     @mock.patch('harbinger.run.loader')
-    def test_worker_failure(self, mock_loader, mock_multiprocessing,
-                            mock_stringio, mock_traceback):
+    def test_worker_failure(self, mock_loader, mock_traceback, capture):
         mock_loader.side_effect = OSError
-        self.assertRaises(OSError, worker, ['test'])
+        with mock.patch('harbinger.run.StringIO') as mock_stringio:
+            mock_exc_buffer = mock.Mock()
+            mock_exc_buffer.getvalue.return_value = 'test_string'
+            mock_stringio.StringIO.return_value = mock_exc_buffer
+            with mock.patch('harbinger.run.multiprocessing'):
+                self.assertRaises(OSError, worker, ['test'])
         mock_loader.assert_called()
-        mock_multiprocessing.current_process.assert_called()
-        mock_stringio.StringIO.assert_called()
         mock_traceback.print_exc.assert_called()
+        capture.check(
+            ('harbinger.run', 'ERROR', 'test_string'),
+        )
