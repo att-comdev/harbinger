@@ -6,6 +6,7 @@ env:
  - TOX_ENV=py27
  - TOX_ENV=pep8
  - TOX_ENV=pylint
+ - TOX_ENV=bandit
 install: 
  - pip install tox
 script: 
