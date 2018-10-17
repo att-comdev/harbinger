@@ -111,14 +111,28 @@ class BaseExecutor(object):
                     test_list.append(os.path.join(dir_name, file_name))
         return test_list
 
+    def valid_schema_value(self, value):
+        valid = False
+        if value[-1] == "/":
+            valid = True
+        else:
+            end_of_path = os.path.basename(os.path.normpath(value))
+            if "." in end_of_path:
+                valid = True
+
+        return valid
+
     def collect_tests(self):
         framework_tests = self.framework.tests
         test_list = []
         bad_test_list = []
+        invalid_schema_value = []
 
         for test in framework_tests:
             if test == "*":
                 test_list += self.walk_directory(self.relative_path)
+            elif not self.valid_schema_value(test):
+                invalid_schema_value.append(test)
             elif os.path.isabs(test) and os.path.exists(test):
                 if os.path.isdir(test):
                     test_list += self.walk_directory(test)
@@ -142,10 +156,17 @@ class BaseExecutor(object):
             else:
                 bad_test_list.append(test)
 
+        if len(invalid_schema_value) > 0:
+            raise RuntimeError(
+                'There are one or more values under tests that'
+                ' violate the schema.\nAll paths must end in'
+                ' a file extention or / to indicate a file or directory:\n'
+                '%s' % invalid_schema_value)
+
         if len(bad_test_list) > 0:
             raise RuntimeError(
-                'There are one or more tests, test paths, '
-                'or directories that do not exist or have'
-                ' invalid extensions. %s' % bad_test_list)
+                'There are one or more tests, test paths,'
+                ' or directories that do not exist or have'
+                ' invalid extensions:\n%s' % bad_test_list)
 
         return test_list
