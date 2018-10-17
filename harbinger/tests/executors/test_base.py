@@ -148,74 +148,94 @@ class TestBaseExecutor(unittest.TestCase):
             actual = test_object.walk_directory('test_dir')
             self.assertListEqual(actual, ['test_dir/test_file.fmt'])
 
+    def test_valid_schema_test(self):
+        test_object = self._get_test_object()
+        test = "test.fmt"
+        self.assertTrue(test_object.valid_schema_value(test))
+        test = "test/"
+        self.assertTrue(test_object.valid_schema_value(test))
+        test = "/test/"
+        self.assertTrue(test_object.valid_schema_value(test))
+        test = "test"
+        self.assertFalse(test_object.valid_schema_value(test))
+
     @mock.patch('harbinger.executors.base.CONF')
     @mock.patch.object(BaseExecutor, 'walk_directory')
-    def test_collect_tests(self, mock_walk, mock_conf):
+    @mock.patch.object(BaseExecutor, 'valid_schema_value')
+    def test_collect_tests(self, mock_valid, mock_walk, mock_conf):
         test_object = self._get_test_object()
         mock_conf.shaker.tests_format = 'fmt'
+        bad_path = 'There are one or more tests, test paths,' \
+                   ' or directories that do not exist or have' \
+                   ' invalid extensions:\n'
+        invalid_path = 'There are one or more values under tests' \
+                       ' that violate the schema.\nAll paths must' \
+                       ' end in a file extention or / to indicate' \
+                       ' a file or directory:\n'
 
         with mock.patch('os.path') as mock_path:
+
             test_object.framework.tests = ['*']
-            mock_walk.return_value = ['test1']
-            self.assertListEqual((test_object.collect_tests()), ['test1'])
+            mock_walk.return_value = ['test1/']
+            self.assertListEqual((test_object.collect_tests()), ['test1/'])
 
             mock_path.isabs.return_value = True
             mock_path.exists.return_value = True
             mock_path.isdir.return_value = True
-            test_object.framework.tests = ['test2']
-            mock_walk.return_value = ['test2']
-            self.assertListEqual((test_object.collect_tests()), ['test2'])
+            test_object.framework.tests = ['test2/']
+            mock_walk.return_value = ['test2/']
+            self.assertListEqual((test_object.collect_tests()), ['test2/'])
 
             mock_path.isdir.return_value = False
+            mock_valid.return_value = True
             test_object.framework.tests = ['test3.fmt']
             self.assertListEqual((test_object.collect_tests()), ['test3.fmt'])
 
-            test_object.framework.tests = ['test4']
+            test_object.framework.tests = ['test4/']
             with self.assertRaises(RuntimeError) as context:
                 test_object.collect_tests()
                 self.assertEqual(context.exception.message,
-                                 'There are one or more tests, test paths, '
-                                 'or directories that do not exist or have'
-                                 ' invalid extensions. [\'test4\']')
+                                 bad_path + '[\'test4\']')
 
             test_object.relative_path = 'test_path/'
             mock_path.isabs.return_value = False
             mock_path.isdir.return_value = True
             mock_path.exists.return_value = True
-            test_object.framework.tests = ['test5']
-            mock_walk.return_value = ['test5']
-            self.assertListEqual(test_object.collect_tests(), ['test5'])
+            test_object.framework.tests = ['test5/']
+            mock_walk.return_value = ['test5/']
+            self.assertListEqual(test_object.collect_tests(), ['test5/'])
 
             mock_path.isdir.return_value = False
             test_object.framework.tests = ['test6.fmt']
             self.assertListEqual(test_object.collect_tests(),
                                  ['test_path/test6.fmt'])
 
-            test_object.framework.tests = ['test7']
+            test_object.framework.tests = ['test7/']
             with self.assertRaises(RuntimeError) as context:
                 test_object.collect_tests()
                 self.assertEqual(context.exception.message,
-                                 'There are one or more tests, test paths, '
-                                 'or directories that do not exist or have'
-                                 ' invalid extensions. [\'test7\']')
+                                 bad_path + '[\'test7\']')
 
             mock_path.exists.return_value = False
-            test_object.framework.tests = ['test8']
+            test_object.framework.tests = ['test8/']
             with self.assertRaises(RuntimeError) as context:
                 test_object.collect_tests()
                 self.assertEqual(context.exception.message,
-                                 'There are one or more tests, test paths, '
-                                 'or directories that do not exist or have'
-                                 ' invalid extensions. [\'test8\']')
+                                 bad_path + '[\'test8\']')
 
             mock_path.isabs.return_value = True
-            test_object.framework.tests = ['test9']
+            test_object.framework.tests = ['test9/']
             with self.assertRaises(RuntimeError) as context:
                 test_object.collect_tests()
                 self.assertEqual(context.exception.message,
-                                 'There are one or more tests, test paths, '
-                                 'or directories that do not exist or have'
-                                 ' invalid extensions. [\'test9\']')
+                                 bad_path + '[\'test9\']')
+
+            test_object.framework.tests = ['test10']
+            mock_valid.return_value = False
+            with self.assertRaises(RuntimeError) as context:
+                test_object.collect_tests()
+                self.assertEqual(context.exception.message,
+                                 invalid_path + '[\'test10\']')
 
 
 def walker(test_path, *args, **kwargs):
