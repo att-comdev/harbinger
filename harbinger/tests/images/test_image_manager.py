@@ -15,7 +15,7 @@ class TestImageManager(unittest.TestCase):
                     test_label = 'test_label'
                     test_auth_url = 'test_auth_url'
                     test_username = 'test_username'
-                    test_password = 'test_password'
+                    test_password = 'test_password'  # nosec
                     test_project_name = 'test_project_name'
                     return ImageManager(test_label, test_auth_url,
                                         test_username, test_password,
