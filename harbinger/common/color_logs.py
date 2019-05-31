@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 
 ATTRIBUTES = dict(
     list(zip([
@@ -87,17 +86,8 @@ class ColorLogFormatter(logging.Formatter):
             if not record.exc_text:
                 record.exc_text = self.formatException(record.exc_info)
         if record.exc_text:
-            try:
-                return unicode(record.exc_text)
-            except UnicodeError:
-                # Sometimes filenames have non-ASCII chars, which can lead
-                # to errors when s is Unicode and record.exc_text is str
-                # See issue 8924.
-                # We also use replace for when there are multiple
-                # encodings, e.g. UTF-8 for the filesystem and latin-1
-                # for a script. See issue 13232.
-                return record.exc_text.decode(sys.getfilesystemencoding(),
-                                              'replace')
+            return str(record.exc_text)
+
         return None
 
     def format(self, record):

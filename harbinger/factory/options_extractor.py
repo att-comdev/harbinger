@@ -7,7 +7,7 @@ OptionsExtractor class:
 from harbinger.factory.options import Options
 
 
-class OptionsExtractor(object):
+class OptionsExtractor():
     """Initialize options variables provided in the yaml file"""
 
     def parse_options(self, yaml_file):

@@ -16,7 +16,7 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class DirectoryManager(object):
+class DirectoryManager():
     def setup(self):
         self.inputs_dir = os.path.join(CONF.DEFAULT.files_dir, "inputs")
         self.outputs_dir = os.path.join(CONF.DEFAULT.files_dir, "outputs")

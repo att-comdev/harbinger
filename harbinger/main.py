@@ -54,8 +54,6 @@ class Harbinger(App):
 
         multiprocessing_logging.install_mp_handler()
 
-        return
-
     # pylint: disable=W0613
     def initialize_app(self, argv):
         LOG.info('Initializing Harbinger')

@@ -1,6 +1,8 @@
+import os
 import unittest
 
 import mock
+
 from oslo_config import cfg
 
 from harbinger.common.utils import Utils
@@ -17,31 +19,22 @@ class TestUtils(unittest.TestCase):
             self.assertEqual('test_classname',
                              Utils.load_class('test_module.test_classname'))
 
-    def test_load_class_value_error(self):
-        def throw(*args, **kwargs):
-            # pylint: disable=unused-argument
-            # These arguments are used by the call to __import__
-            raise ValueError()
-        try:
-            with mock.patch('__builtin__.__import__', side_effect=throw):
-                self.assertRaises(ValueError, Utils.load_class('test_class'))
-        except ValueError:
-            pass
-
     def test_load_class_import_error(self):
         def throw(*args, **kwargs):
             # pylint: disable=unused-argument
             # These arguments are used by the call to __import__
             raise ImportError()
-        with mock.patch('__builtin__.__import__', side_effect=throw):
-            self.assertIsNone(Utils.load_class('test.class.please.ignore'))
+        with mock.patch('builtins.__import__', side_effect=throw):
+            with self.assertRaises(ImportError):
+                Utils.load_class('test.class.please.ignore')
 
     def test_load_class_attribute_error(self):
-        class Stateless(object):
+        class Stateless():
             pass
         mock_module = mock.MagicMock(spec=Stateless)
         with mock.patch.dict('sys.modules', test_module=mock_module):
-            self.assertIsNone(Utils.load_class('test_module.test_classname'))
+            with self.assertRaises(AttributeError):
+                Utils.load_class('test_module.test_classname')
 
     def test_load_class_not_none(self):
         self.assertRaises(ValueError, Utils.load_class, None)
@@ -104,9 +97,11 @@ class TestUtils(unittest.TestCase):
                          'test_val')
         self.assertEqual(mock_conf.call_count, 0)
 
-    @mock.patch('os.environ.__setitem__')
+    @mock.patch.object(os._Environ, '__setitem__')
     @mock.patch.object(Utils, 'hierarchy_lookup')
     def test_source_openrc(self, mock_hierarchy, mock_setitem):
+        mock_hierarchy.side_effect = ['username', 'password',
+                                      'project', 'external_network']
         Utils.source_openrc(None)
         self.assertEqual(mock_hierarchy.call_count, 4)
         self.assertEqual(mock_setitem.call_count, 4)

@@ -15,7 +15,7 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class ImageManager(object):
+class ImageManager():
     def __init__(self, label, auth_url, username, password, project_name):
         loader = loading.get_plugin_loader('password')
         auth = loader.load_from_options(
@@ -65,7 +65,7 @@ class ImageManager(object):
                 self.glance.images.upload(img.id, open(full_path, 'rb'))
             except Exception as ex:
                 msg = 'Error connecting to Glance, ' \
-                      'check proxy and no_proxy settings\n' + ex.message
+                      'check proxy and no_proxy settings\n' + str(ex)
                 LOG.error(msg)
                 raise
 

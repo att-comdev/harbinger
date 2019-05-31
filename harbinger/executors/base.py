@@ -8,17 +8,18 @@ import os
 import shlex
 import subprocess
 
+from oslo_config import cfg
+from oslo_log import log as logging
+
 from harbinger.common.utils import Utils
 from harbinger.flavors.flavor_manager import FlavorManager
 from harbinger.images.image_manager import ImageManager
-from oslo_config import cfg
-from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class BaseExecutor(object):
+class BaseExecutor():
     def __init__(self, framework, environment, options):
         self.inputs_dir = os.path.join(CONF.DEFAULT.files_dir, "inputs")
         self.outputs_dir = os.path.join(CONF.DEFAULT.files_dir, "outputs")
@@ -29,6 +30,7 @@ class BaseExecutor(object):
             CONF.DEFAULT.files_dir, "frameworks",
             self.framework.name, Utils.hierarchy_lookup(self, "test_paths"))
 
+        os.environ["OS_PROJECT_DOMAIN_NAME"] = "default"
         self.image = ImageManager(self.framework.name,
                                   self.environment.OS_AUTH_URL +
                                   self.environment.OS_API_VERSION,
@@ -52,14 +54,14 @@ class BaseExecutor(object):
         Envronment section of input yaml as python environment variables
 
         """
-        for attr, value in self.environment.__dict__.iteritems():
+        for attr, value in self.environment.__dict__.items():
             if attr.isupper():
                 os.environ[attr] = value
 
         # set environment_overrides present in input.yaml
         attr = getattr(self.framework, 'environment_overrides', None)
         if attr is not None:
-            for key, value in attr.iteritems():
+            for key, value in attr.items():
                 if key.isupper():
                     os.environ[key] = value
 
@@ -96,11 +98,11 @@ class BaseExecutor(object):
         output = popen.communicate()
         return_code = popen.returncode
 
-        if return_code == 0:
-            return output
-        else:
+        if return_code != 0:
             raise RuntimeError('command <%s> failed with return code %s' % (
                 command, return_code))
+
+        return output
 
     def walk_directory(self, directory):
         test_list = []

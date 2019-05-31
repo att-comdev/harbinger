@@ -4,6 +4,6 @@ BaseFactory class:
 """
 
 
-class BaseFactory(object):
+class BaseFactory():
     def __init__(self):
         pass

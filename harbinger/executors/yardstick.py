@@ -3,7 +3,7 @@ YardsstickExecutor class:
     - yardstick framework execution class
 """
 import collections
-import ConfigParser
+import configparser
 import os
 import tempfile
 
@@ -35,7 +35,7 @@ class YardstickExecutor(BaseExecutor):
         self.test_paths = os.path.join(CONF[self.framework.name].test_paths)
         self.test_suite_name = "yardstick-suite.yaml"
 
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.RawConfigParser()
 
     def setup(self):
         super(YardstickExecutor, self).setup()
@@ -103,7 +103,7 @@ class YardstickExecutor(BaseExecutor):
             yaml_file.write(file_contents)
 
     def add_extras_options(self):
-        for key, value in self.framework.extras.iteritems():
+        for key, value in self.framework.extras.items():
             self.config.set("DEFAULT", str(key), value)
 
     def create_yardstick_conf(self):

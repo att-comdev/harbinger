@@ -44,7 +44,7 @@ class TestDirectoryManager(unittest.TestCase):
             ('.', ['dir1'], ['file1'])
         ]
 
-        with mock.patch("__builtin__.open",
+        with mock.patch("builtins.open",
                         mock.mock_open(read_data="data")) as mock_file:
             self.test_object.archive_outputs()
             self.assertEqual(open("path/to/open").read(), "data")
@@ -56,6 +56,6 @@ class TestDirectoryManager(unittest.TestCase):
 
         mock_os.walk.return_value = []
 
-        with mock.patch("__builtin__.open") as mock_file:
+        with mock.patch("builtins.open") as mock_file:
             self.test_object.archive_outputs()
             mock_file.assert_not_called()

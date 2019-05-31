@@ -4,11 +4,12 @@ ListFrameworks class:
     through the provided yaml file
 """
 
-from harbinger import base
-from harbinger.common.utils import Utils
 from oslo_config import cfg
 from oslo_log import log as logging
 from prettytable import PrettyTable
+
+from harbinger import base
+from harbinger.common.utils import Utils
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF

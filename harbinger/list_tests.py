@@ -6,10 +6,11 @@ ListTests class:
 
 import os
 
-from harbinger import base
 from oslo_config import cfg
 from oslo_log import log as logging
 from prettytable import PrettyTable
+
+from harbinger import base
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
@@ -72,8 +73,8 @@ class ListTests(base.Base):
 
             table = PrettyTable([path])
             if path != longest_path:
-                table.padding_width = ((longest_path_length - len(
-                    path)) / 2) + 1
+                table.padding_width = int(((longest_path_length - len(
+                    path)) / 2) + 1)
             test_tables.append(table)
 
         return test_tables

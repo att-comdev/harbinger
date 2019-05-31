@@ -13,7 +13,7 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class FlavorManager(object):
+class FlavorManager():
     def __init__(self, label, auth_url, username, password, project_name):
         loader = loading.get_plugin_loader('password')
         auth = loader.load_from_options(

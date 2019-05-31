@@ -4,10 +4,10 @@ Run class:
     data from the yaml file and proceeds to run the relevant
     frameworks
 """
+import io
 import multiprocessing
 import os
 import signal
-import StringIO
 import traceback
 
 from oslo_config import cfg
@@ -81,7 +81,7 @@ class Run(base.CommandBase):
         if self.options.execution_mode == 'serial':
             self.execute_serial()
         else:
-            # paralell is default
+            # parallel is default
             self.execute_parallel()
 
         LOG.info('All frameworks have finished execution')
@@ -120,8 +120,8 @@ def loader(name, framework, environment, options):
     # alter the name to correctly find the class e.g. go from shaker to Shaker
     class_name = name.title()
     cls = Utils.load_class(
-        'harbinger.executors.' + name
-        + '.' + class_name + 'Executor')
+        'harbinger.executors.' + name +
+        '.' + class_name + 'Executor')
     framework_executor = cls(framework, environment, options)
     framework_executor.setup()
 
@@ -147,7 +147,7 @@ def worker(args):
         return loader(*args)
     except Exception:
         # this is used to correctly capture traceback from exceptions
-        exc_buffer = StringIO.StringIO()
+        exc_buffer = io.StringIO()
         traceback.print_exc(file=exc_buffer)
         LOG.error(exc_buffer.getvalue())
         raise

@@ -30,7 +30,7 @@ class TestRemoveScaffold(unittest.TestCase):
     @mock.patch.object(RemoveScaffold, 'delete_venv_directories')
     @mock.patch.object(RemoveScaffold, 'delete_framework_directories')
     @mock.patch.object(RemoveScaffold, 'delete_framework_section')
-    @mock.patch('ConfigParser.RawConfigParser')
+    @mock.patch('configparser.RawConfigParser')
     @mock.patch('os.path.dirname', return_value='test_path')
     def test_take_action(self, mock_dirname, mock_cfg_parser,
                          mock_delete_framework_section,

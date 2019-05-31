@@ -2,7 +2,7 @@
 ShakerExecutor class:
     - shaker framework execution class
 """
-import ConfigParser
+import configparser
 import os
 
 from oslo_config import cfg
@@ -25,10 +25,11 @@ class ShakerExecutor(BaseExecutor):
         self.collected_tests_list = self.collect_tests()
         self.formated_tests = self.format_collected_tests(
             self.collected_tests_list)
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.RawConfigParser()
 
     def setup(self):
         super(ShakerExecutor, self).setup()
+
         image_name = Utils.hierarchy_lookup(self, 'image')
         image_exists = self.image.check_image(image_name)
 
@@ -40,7 +41,7 @@ class ShakerExecutor(BaseExecutor):
         self._exec_cmd("shaker --config-file " + self.cfg_full_path)
 
     def add_extras_options(self):
-        for key, value in self.framework.extras.iteritems():
+        for key, value in self.framework.extras.items():
             self.config.set("DEFAULT", str(key), value)
 
     def format_collected_tests(self, collected_tests_list):
@@ -74,7 +75,7 @@ class ShakerExecutor(BaseExecutor):
         self.config.set("DEFAULT", "server_endpoint", server_endpoint)
         self.config.set("DEFAULT", "external_net", external_net)
 
-        with open(self.cfg_full_path, 'wb') as configfile:
+        with open(self.cfg_full_path, 'w') as configfile:
             self.config.write(configfile)
 
     def create_image(self):

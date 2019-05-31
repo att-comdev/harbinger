@@ -4,13 +4,14 @@ RemoveScaffold class:
     and references, including harbinger.cfg section
 """
 
-import ConfigParser
+import configparser
 import os
 import shutil
 
-from harbinger import base
 from oslo_config import cfg
 from oslo_log import log as logging
+
+from harbinger import base
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
@@ -42,7 +43,7 @@ class RemoveScaffold(base.Base):
             self.app_args.framework_file)
         self.harbinger_cfg_path = os.path.join(os.path.dirname(__file__),
                                                "etc/harbinger.cfg")
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.RawConfigParser()
         self.config.read(self.harbinger_cfg_path)
 
         self.delete_framework_section()

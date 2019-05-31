@@ -52,7 +52,7 @@ class TestBaseExecutor(unittest.TestCase):
     def test_export_environment(self):
         test_object = self._get_test_object()
 
-        class Empty(object):
+        class Empty():
             pass
 
         test_object.environment = Empty()
@@ -90,7 +90,7 @@ class TestBaseExecutor(unittest.TestCase):
     @mock.patch('subprocess.Popen')
     def test__exec_cmd(self, mock_popen_init, capture):
 
-        class TestReadline(object):
+        class TestReadline():
 
             def __init__(self):
                 self.called = False
@@ -114,7 +114,7 @@ class TestBaseExecutor(unittest.TestCase):
             with self.assertRaises(RuntimeError) as context:
                 test_object._exec_cmd('test_command')
             exception = context.exception
-            self.assertEqual(exception.message,
+            self.assertEqual(str(exception),
                              'command <test_command> '
                              'failed with return code -1')
             mock_popen_init.assert_called_once_with(

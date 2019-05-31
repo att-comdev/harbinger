@@ -9,7 +9,7 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class Utils(object):
+class Utils():
     @staticmethod
     def load_class(dottedpath):
         """Load a class from a module in dotted-path notation.
@@ -24,25 +24,20 @@ class Utils(object):
         modulename = '.'.join(splitted_path[:-1])
         classname = splitted_path[-1]
         try:
-            try:
-                module = __import__(modulename, globals(), locals(),
-                                    [classname])
-            except ValueError:  # Py < 2.5
-                if not modulename:
-                    module = __import__(__name__.split('.')[0],
-                                        globals(), locals(), [classname])
+            module = __import__(modulename, globals(), locals(),
+                                [classname])
         except ImportError:
             # properly log the exception information and return None
             # to tell caller we did not succeed
-            LOG.exception('tg.utils: Could not import %s'
-                          ' because an exception occurred', dottedpath)
-            return None
+            msg = ('tg.utils: Could not import {} '
+                   'because an exception occurred'.format(dottedpath))
+            raise ImportError(msg)
         try:
             return getattr(module, classname)
         except AttributeError:
-            LOG.exception('tg.utils: Could not import %s'
-                          ' because the class was not found', dottedpath)
-            return None
+            msg = ('tg.utils: Could not import {} '
+                   'because the class was not found'.format(dottedpath))
+            raise AttributeError(msg)
 
     @staticmethod
     def get_supported_frameworks():

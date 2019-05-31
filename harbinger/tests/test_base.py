@@ -3,8 +3,9 @@ import copy
 import os
 import unittest
 
-from harbinger import base
 import mock
+
+from harbinger import base
 
 
 class TestBase(unittest.TestCase):

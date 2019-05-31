@@ -7,7 +7,7 @@ EnvironmentExtractor class:
 from harbinger.factory.environment import Environment
 
 
-class EnvironmentExtractor(object):
+class EnvironmentExtractor():
     """Initialize environment variables provided in the yaml file"""
 
     def parse_environment(self, yaml_file):

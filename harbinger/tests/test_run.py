@@ -173,10 +173,10 @@ class TestRun(unittest.TestCase):
     @mock.patch('harbinger.run.loader')
     def test_worker_failure(self, mock_loader, mock_traceback, capture):
         mock_loader.side_effect = OSError
-        with mock.patch('harbinger.run.StringIO') as mock_stringio:
+        with mock.patch('harbinger.run.io') as mock_io:
             mock_exc_buffer = mock.Mock()
             mock_exc_buffer.getvalue.return_value = 'test_string'
-            mock_stringio.StringIO.return_value = mock_exc_buffer
+            mock_io.StringIO.return_value = mock_exc_buffer
             with mock.patch('harbinger.run.multiprocessing'):
                 self.assertRaises(OSError, worker, ['test'])
         mock_loader.assert_called()

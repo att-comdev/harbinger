@@ -30,7 +30,7 @@ class TestScaffold(unittest.TestCase):
     @mock.patch.object(Scaffold, 'create_venv_directories')
     @mock.patch.object(Scaffold, 'create_framework_directories')
     @mock.patch.object(Scaffold, 'add_framework_section')
-    @mock.patch('ConfigParser.RawConfigParser')
+    @mock.patch('configparser.RawConfigParser')
     @mock.patch('os.path.dirname', return_value='test_path')
     def test_take_action(self, mock_dirname, mock_cfg_parser,
                          mock_add_framework_section,

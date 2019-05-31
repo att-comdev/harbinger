@@ -4,14 +4,15 @@ Scaffold class:
     harbinger.cfg option for the framework
 """
 
-import ConfigParser
+import configparser
 import os
 
-from harbinger import base
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from oslo_config import cfg
 from oslo_log import log as logging
+
+from harbinger import base
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
@@ -43,7 +44,7 @@ class Scaffold(base.Base):
             self.app_args.framework_file)
         self.harbinger_cfg_path = os.path.join(os.path.dirname(__file__),
                                                "etc/harbinger.cfg")
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.RawConfigParser()
         self.config.read(self.harbinger_cfg_path)
 
         first_letter = parsed_args.framework[0].upper()

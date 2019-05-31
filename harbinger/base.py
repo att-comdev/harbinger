@@ -66,7 +66,7 @@ class Base(Command):
 
     def load_yaml(self, yaml_file):
         with open(yaml_file, 'r') as yaml_f:
-            return yaml.load(yaml_f)
+            return yaml.load(yaml_f, Loader=yaml.FullLoader)
 
 
 class CommandBase(Base):

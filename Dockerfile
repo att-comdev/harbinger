@@ -1,4 +1,4 @@
-FROM bitnami/minideb:jessie
+FROM bitnami/minideb:stretch
 
 LABEL maintainer "Oded Le'Sage <ol7435@att.com>"
 
@@ -10,10 +10,10 @@ RUN apt-get update && install_packages sudo ncurses-bin nano git curl \
     wget gcc netbase vim tree less qemu-utils kpartx
 
 # install system python packages
-RUN install_packages python-dev python-pip
+RUN install_packages python3-dev python3-pip
 
 # upgrade python install packages
-RUN pip install -U pip pbr setuptools
+RUN pip3 install -U pip pbr setuptools
 
 # install python packages
 RUN pip install virtualenv tox
