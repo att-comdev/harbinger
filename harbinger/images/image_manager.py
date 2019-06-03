@@ -18,6 +18,7 @@ CONF = cfg.CONF
 class ImageManager():
     def __init__(self, label, **kwargs):
         loader = loading.get_plugin_loader('password')
+
         auth = loader.load_from_options(**kwargs)
         session2 = session.Session(auth=auth)
 

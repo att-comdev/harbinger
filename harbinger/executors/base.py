@@ -45,7 +45,7 @@ class BaseExecutor():
             'user_domain_name': getattr(self.options,
                                         'user_domain_name', None),
             'project_id': getattr(self.options, 'project_id', None),
-            'project_name': getattr(self.options, 'project', None),
+            'project_name': getattr(self.options, 'project_name', None),
             'project_domain_id': getattr(self.options,
                                          'project_domain_id', None),
             'project_domain_name': getattr(self.options,

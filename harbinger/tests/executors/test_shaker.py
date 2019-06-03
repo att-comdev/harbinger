@@ -123,7 +123,11 @@ class TestShakerExecutor(unittest.TestCase):
         calls = [
             mock.call('DEFAULT', 'os_username', 'test_username'),
             mock.call('DEFAULT', 'os_password', 'test_password'),
-            mock.call('DEFAULT', 'os_project_name', 'test_project'),
+            mock.call('DEFAULT', 'os_project_name', 'test_project_name'),
+            mock.call('DEFAULT', 'os_user_domain_name',
+                      'test_user_domain_name'),
+            mock.call('DEFAULT', 'os_project_domain_name',
+                      'test_project_domain_name'),
             mock.call('DEFAULT', 'flavor_name', 'test_flavor_name'),
             mock.call('DEFAULT', 'image_name', 'test_image'),
             mock.call('DEFAULT', 'output', 'test_output'),

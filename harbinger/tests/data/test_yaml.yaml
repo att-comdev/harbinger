@@ -32,4 +32,4 @@ Environment:
 Options:
   username: user
   password: password
-  project: myTestProject
+  project_name: myTestProject

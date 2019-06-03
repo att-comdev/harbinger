@@ -101,7 +101,7 @@ class TestUtils(unittest.TestCase):
     @mock.patch.object(Utils, 'hierarchy_lookup')
     def test_source_openrc(self, mock_hierarchy, mock_setitem):
         mock_hierarchy.side_effect = ['username', 'password',
-                                      'project', 'external_network']
+                                      'project_name', 'external_network']
         Utils.source_openrc(None)
         self.assertEqual(mock_hierarchy.call_count, 4)
         self.assertEqual(mock_setitem.call_count, 4)

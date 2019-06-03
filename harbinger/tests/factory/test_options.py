@@ -21,4 +21,4 @@ class TestOptions(unittest.TestCase):
 
     def test__init(self):
         self.test_object = Options(self.yaml_file["Options"])
-        self.assertEqual("myTestProject", self.test_object.project)
+        self.assertEqual("myTestProject", self.test_object.project_name)

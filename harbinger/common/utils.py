@@ -118,6 +118,6 @@ class Utils():
         os.environ['OS_PASSWORD'] = cls.hierarchy_lookup(
             executor, 'password')
         os.environ['OS_PROJECT_NAME'] = cls.hierarchy_lookup(
-            executor, 'project')
+            executor, 'project_name')
         os.environ['EXTERNAL_NETWORK'] = cls.hierarchy_lookup(
             executor, 'external_network')

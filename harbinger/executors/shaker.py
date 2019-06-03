@@ -57,7 +57,12 @@ class ShakerExecutor(BaseExecutor):
 
         username = Utils.hierarchy_lookup(self, 'username')
         password = Utils.hierarchy_lookup(self, 'password')
-        project_name = Utils.hierarchy_lookup(self, 'project')
+        project_name = Utils.hierarchy_lookup(self, 'project_name')
+        user_domain_name = Utils.hierarchy_lookup(self, 'user_domain_name')
+        user_domain_id = Utils.hierarchy_lookup(self, 'user_domain_id')
+        project_domain_name = Utils.hierarchy_lookup(self,
+                                                     'project_domain_name')
+        project_domain_id = Utils.hierarchy_lookup(self, 'project_domain_id')
         flavor_name = Utils.hierarchy_lookup(self, 'flavor_name')
         image_name = Utils.hierarchy_lookup(self, 'image')
         output = self.results_json_path
@@ -65,9 +70,14 @@ class ShakerExecutor(BaseExecutor):
         server_endpoint = Utils.hierarchy_lookup(self, 'server_endpoint')
         external_net = Utils.hierarchy_lookup(self, 'external_network')
 
+        user_domain = user_domain_name or user_domain_id
+        project_domain = project_domain_name or project_domain_id
+
         self.config.set("DEFAULT", "os_username", username)
         self.config.set("DEFAULT", "os_password", password)
         self.config.set("DEFAULT", "os_project_name", project_name)
+        self.config.set("DEFAULT", "os_user_domain_name", user_domain)
+        self.config.set("DEFAULT", "os_project_domain_name", project_domain)
         self.config.set("DEFAULT", "flavor_name", flavor_name)
         self.config.set("DEFAULT", "image_name", image_name)
         self.config.set("DEFAULT", "output", output)

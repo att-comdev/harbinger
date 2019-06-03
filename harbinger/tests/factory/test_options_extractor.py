@@ -27,4 +27,4 @@ class TestOptionsExtractor(unittest.TestCase):
 
     def test_parse_framework(self):
         self.options = self.test_object.parse_options(self.yaml_file)
-        self.assertEqual("myTestProject", self.options.project)
+        self.assertEqual("myTestProject", self.options.project_name)
