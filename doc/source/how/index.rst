@@ -20,17 +20,23 @@ In order to create a valid yaml file, three blocks are required. A sample input 
 1) Options
     Harbinger global options
 
-    - project *(name of the openstack project to use)*
-    - username *(openstack user)*
+    - user_id *(openstack user_id)*
+    - username *(openstack username)*
     - password *(openstack password)*
+    - project_id *(openstack project_id)*
+    - project_name *(openstack project_name)*
+    - user_domain_id *(openstack user_domain_id)*
+    - user_domain_name *(openstack user_domain_name)*
+    - project_domain_id *(openstack project_domain_id)*
+    - project_domain_name *(openstack project_domain_name)*
     - execution_mode  *(serial or parallel[default])*
 
 2) Environment
     specify which environment you want to test against
 
-    - OS_AUTH_URL *(keystone url)*
+    - OS_AUTH_URL *(openstack keystone url - without keystone version)*
     - OS_REGION_NAME *(openstack region)*
-    - OS_API_VERSION *(keystone api version)*
+    - OS_API_VERSION *(openstack keystone api version e.g. "v3")*
     - EXTERNAL_NETWORK *(network defined as external in openstack)*
 
 3) Execute

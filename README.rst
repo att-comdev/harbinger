@@ -18,12 +18,11 @@ Supported Data Plane Testing Frameworks
 Links
 -----
 * Free software: Apache license
-* Documentation: https://docs.openstack.org/harbinger/latest
 * Source: https://git.openstack.org/cgit/openstack/harbinger
 * Bugs: https://bugs.launchpad.net/harbinger
 
 --------
 
 * TODO
-* complete unit tests
+* add support for Kloudbuster https://github.com/openstack/kloudbuster
 

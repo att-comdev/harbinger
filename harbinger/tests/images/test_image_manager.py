@@ -9,26 +9,32 @@ from harbinger.images.image_manager import ImageManager
 class TestImageManager(unittest.TestCase):
 
     def _get_test_object(self):
+        openstack_creds = {
+            'auth_url': 'test_auth_url',
+            'user_id': 'test_user_id',
+            'username': 'test_username',
+            'password': 'test_password',  # nosec
+            'user_domain_id': 'test_user_domain_id',
+            'user_domain_name': 'test_user_domain_name',
+            'project_id': 'test_project_id',
+            'project_name': 'test_project_name',
+            'project_domain_id': 'test_project_domain_id',
+            'project_domain_name': 'test_project_domain_name'
+        }
         with mock.patch('keystoneauth1.loading.get_plugin_loader'):
             with mock.patch('harbinger.images.image_manager.Client'):
                 with mock.patch('keystoneauth1.session.Session'):
                     test_label = 'test_label'
-                    test_auth_url = 'test_auth_url'
-                    test_username = 'test_username'
-                    test_password = 'test_password'  # nosec
-                    test_project_name = 'test_project_name'
-                    return ImageManager(test_label, test_auth_url,
-                                        test_username, test_password,
-                                        test_project_name)
+
+                    return ImageManager(test_label, **openstack_creds)
 
     @log_capture()
     def test___init__(self, capture):
         test_object = self._get_test_object()  # noqa: F841
         capture.check(
             ('harbinger.images.image_manager', 'INFO',
-             'Creating Glance client for test_label with parameters: '
-             'keystone_endpoint: test_auth_url, username: test_username, '
-             'project_name: test_project_name'),
+             'Creating Glance client for test_label '
+             'using keystone: test_auth_url'),
         )
 
     @log_capture()

@@ -11,26 +11,31 @@ from harbinger.flavors.flavor_manager import FlavorManager
 class TestFlavorManager(unittest.TestCase):
 
     def setUp(self):
+        self.openstack_creds = {
+            'auth_url': 'test_auth_url',
+            'user_id': 'test_user_id',
+            'username': 'test_username',
+            'password': 'test_password',  # nosec
+            'user_domain_id': 'test_user_domain_id',
+            'user_domain_name': 'test_user_domain_name',
+            'project_id': 'test_project_id',
+            'project_name': 'test_project_name',
+            'project_domain_id': 'test_project_domain_id',
+            'project_domain_name': 'test_project_domain_name'
+        }
         self.args = mock.Mock(spec=argparse.Namespace)
         self.base_object = Base(app=mock.Mock(), app_args=self.args)
-        self.test_object = FlavorManager(
-            "framework", "example.com/fake",
-            "username", "password", "myProject"
-        )
+        self.test_object = FlavorManager("framework", **self.openstack_creds)
 
     @log_capture()
     def test__init(self, capture):
         with mock.patch('harbinger.flavors.flavor_manager.FlavorManager'):
-            FlavorManager(
-                "framework", "example.com/fake",
-                "username", "password", "myProject"
-            )
+            FlavorManager("framework", **self.openstack_creds)
 
             capture.check_present(
                 ('harbinger.flavors.flavor_manager', 'INFO',
-                 'Creating Nova client (for flavor mgmt) for framework '
-                 'with parameters: keystone_endpoint: example.com/fake,'
-                 ' username: username, project_name: myProject')
+                 'Creating Nova client for framework '
+                 'using keystone: test_auth_url')
             )
 
     @log_capture()

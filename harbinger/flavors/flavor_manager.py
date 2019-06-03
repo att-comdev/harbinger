@@ -14,19 +14,14 @@ CONF = cfg.CONF
 
 
 class FlavorManager():
-    def __init__(self, label, auth_url, username, password, project_name):
+    def __init__(self, label, **kwargs):
         loader = loading.get_plugin_loader('password')
-        auth = loader.load_from_options(
-            auth_url=auth_url,
-            username=username,
-            password=password,
-            project_name=project_name)
+        auth = loader.load_from_options(**kwargs)
         session2 = session.Session(auth=auth)
 
         LOG.info(
-            'Creating Nova client (for flavor mgmt) for %s with parameters: '
-            'keystone_endpoint: %s, username: %s, project_name: %s',
-            label, auth_url, username, project_name)
+            'Creating Nova client for %s using keystone: %s',
+            label, kwargs.pop('auth_url'))
 
         self.nova = client.Client(2, session=session2)
 

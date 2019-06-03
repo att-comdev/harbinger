@@ -30,19 +30,30 @@ class BaseExecutor():
             CONF.DEFAULT.files_dir, "frameworks",
             self.framework.name, Utils.hierarchy_lookup(self, "test_paths"))
 
-        os.environ["OS_PROJECT_DOMAIN_NAME"] = "default"
-        self.image = ImageManager(self.framework.name,
-                                  self.environment.OS_AUTH_URL +
-                                  self.environment.OS_API_VERSION,
-                                  self.options.username, self.options.password,
-                                  self.options.project)
+        auth_url = self.environment.OS_AUTH_URL + \
+            self.environment.OS_API_VERSION
 
-        self.flavor = FlavorManager(self.framework.name,
-                                    self.environment.OS_AUTH_URL +
-                                    self.environment.OS_API_VERSION,
-                                    self.options.username,
-                                    self.options.password,
-                                    self.options.project)
+        client_label = self.framework.name
+
+        openstack_creds = {
+            'auth_url': auth_url,
+            'user_id': getattr(self.options, 'user_id', None),
+            'username': getattr(self.options, 'username', None),
+            'password': getattr(self.options, 'password', None),
+            'user_domain_id': getattr(self.options,
+                                      'user_domain_id', None),
+            'user_domain_name': getattr(self.options,
+                                        'user_domain_name', None),
+            'project_id': getattr(self.options, 'project_id', None),
+            'project_name': getattr(self.options, 'project', None),
+            'project_domain_id': getattr(self.options,
+                                         'project_domain_id', None),
+            'project_domain_name': getattr(self.options,
+                                           'project_domain_name', None)
+        }
+
+        self.image = ImageManager(client_label, **openstack_creds)
+        self.flavor = FlavorManager(client_label, **openstack_creds)
 
     def setup(self):
         self.export_environment()
