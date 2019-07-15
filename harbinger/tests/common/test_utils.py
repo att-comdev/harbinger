@@ -11,7 +11,6 @@ from harbinger.factory.base import BaseFactory
 
 class TestUtils(unittest.TestCase):
     """Unit tests for Utils"""
-
     def test_load_class(self):
         mock_module = mock.MagicMock()
         mock_module.test_classname = "test_classname"
@@ -24,6 +23,7 @@ class TestUtils(unittest.TestCase):
             # pylint: disable=unused-argument
             # These arguments are used by the call to __import__
             raise ImportError()
+
         with mock.patch('builtins.__import__', side_effect=throw):
             with self.assertRaises(ImportError):
                 Utils.load_class('test.class.please.ignore')
@@ -31,6 +31,7 @@ class TestUtils(unittest.TestCase):
     def test_load_class_attribute_error(self):
         class Stateless():
             pass
+
         mock_module = mock.MagicMock(spec=Stateless)
         with mock.patch.dict('sys.modules', test_module=mock_module):
             with self.assertRaises(AttributeError):
@@ -42,8 +43,8 @@ class TestUtils(unittest.TestCase):
     @mock.patch('oslo_config.cfg.CONF.get')
     @mock.patch('os.path.dirname', return_value='test_path')
     @mock.patch('os.listdir', return_value=['second.py', 'first.py'])
-    def test_get_supported_frameworks(self, mock_listdir,
-                                      mock_dirname, mock_conf):
+    def test_get_supported_frameworks(self, mock_listdir, mock_dirname,
+                                      mock_conf):
         self.assertEqual(['first', 'second'], Utils.get_supported_frameworks())
         self.assertEqual(mock_dirname.call_count, 2)
         self.assertEqual(mock_conf.call_count, 2)
@@ -100,8 +101,9 @@ class TestUtils(unittest.TestCase):
     @mock.patch.object(os._Environ, '__setitem__')
     @mock.patch.object(Utils, 'hierarchy_lookup')
     def test_source_openrc(self, mock_hierarchy, mock_setitem):
-        mock_hierarchy.side_effect = ['username', 'password',
-                                      'project_name', 'external_network']
+        mock_hierarchy.side_effect = [
+            'username', 'password', 'project_name', 'external_network'
+        ]
         Utils.source_openrc(None)
         self.assertEqual(mock_hierarchy.call_count, 4)
         self.assertEqual(mock_setitem.call_count, 4)

@@ -44,8 +44,11 @@ class YardstickExecutor(BaseExecutor):
         flavor_name = Utils.hierarchy_lookup(self, 'flavor_name')
         flavor_exists = self.flavor.check_flavor(flavor_name)
         if flavor_exists is False:
-            self.flavor.create_flavor(name=flavor_name, ram='512',
-                                      vcpus='1', disk='3', swap='100')
+            self.flavor.create_flavor(name=flavor_name,
+                                      ram='512',
+                                      vcpus='1',
+                                      disk='3',
+                                      swap='100')
 
         # check image
         image_name = Utils.hierarchy_lookup(self, 'image')
@@ -98,8 +101,8 @@ class YardstickExecutor(BaseExecutor):
 
         file_contents = yaml.dump(test_suite_yaml, default_flow_style=False)
 
-        with open(os.path.join(self.inputs_dir,
-                               self.test_suite_name), 'w') as yaml_file:
+        with open(os.path.join(self.inputs_dir, self.test_suite_name),
+                  'w') as yaml_file:
             yaml_file.write(file_contents)
 
     def add_extras_options(self):

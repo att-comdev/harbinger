@@ -25,7 +25,6 @@ from harbinger.common import color_logs
 
 
 class ColorLogFormatterTest(unittest.TestCase):
-
     def setUp(self):
         self.formatter = color_logs.ColorLogFormatter()
 
@@ -79,13 +78,13 @@ class ColorLogFormatterTest(unittest.TestCase):
 
         self.assertEqual("%s%s" % (text, color_logs.RESET),
                          self.formatter.colored(text))
-        self.assertEqual("%s%s%s" % ('\033[4m\033[5m\033[41m\033[34m',
-                                     text, color_logs.RESET),
-                         self.formatter.colored(
-                             text,
-                             color="blue",
-                             on_color="on_red",
-                             attrs=["blink", "underline"]))
+        self.assertEqual(
+            "%s%s%s" %
+            ('\033[4m\033[5m\033[41m\033[34m', text, color_logs.RESET),
+            self.formatter.colored(text,
+                                   color="blue",
+                                   on_color="on_red",
+                                   attrs=["blink", "underline"]))
 
     def test_colored_with_ansi_coloring_disabled(self):
         # If we disable Ansi-coloring, the input string should be the same
@@ -95,11 +94,11 @@ class ColorLogFormatterTest(unittest.TestCase):
 
         os.environ['ANSI_COLORS_DISABLED'] = "Y"
         self.assertEqual(expected, self.formatter.colored(text))
-        self.assertEqual(expected,
-                         self.formatter.colored(
-                             text,
-                             color="blue",
-                             on_color="on_red",
-                             attrs=["blink", "underline"]))
+        self.assertEqual(
+            expected,
+            self.formatter.colored(text,
+                                   color="blue",
+                                   on_color="on_red",
+                                   attrs=["blink", "underline"]))
 
         os.environ.pop('ANSI_COLORS_DISABLED', None)

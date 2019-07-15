@@ -91,8 +91,10 @@ class Run(base.CommandBase):
                  self.frameworks_dict.keys())
 
         for item in self.frameworks_dict:
-            worker([item, self.frameworks_dict[item], self.environment,
-                    self.options])
+            worker([
+                item, self.frameworks_dict[item], self.environment,
+                self.options
+            ])
 
     def execute_parallel(self):
         LOG.info('Executing frameworks %s in parallel',
@@ -102,11 +104,9 @@ class Run(base.CommandBase):
         parent_id = os.getpid()
         pool = multiprocessing.Pool(initializer=worker_init(parent_id))
         for item in self.frameworks_dict:
-            results.append(pool.apply_async(worker, [(item,
-                                                      self.frameworks_dict[
-                                                          item],
-                                                      self.environment,
-                                                      self.options)]))
+            results.append(
+                pool.apply_async(worker, [(item, self.frameworks_dict[item],
+                                           self.environment, self.options)]))
 
         pool.close()
         pool.join()
@@ -119,9 +119,8 @@ class Run(base.CommandBase):
 def loader(name, framework, environment, options):
     # alter the name to correctly find the class e.g. go from shaker to Shaker
     class_name = name.title()
-    cls = Utils.load_class(
-        'harbinger.executors.' + name +
-        '.' + class_name + 'Executor')
+    cls = Utils.load_class('harbinger.executors.' + name + '.' + class_name +
+                           'Executor')
     framework_executor = cls(framework, environment, options)
     framework_executor.setup()
 
@@ -138,6 +137,7 @@ def worker_init(parent_id):
         parent.kill()
         LOG.error("exiting all: %s" % os.getpid())
         Process(os.getpid()).kill()
+
     signal.signal(signal.SIGINT, sig_int)
 
 

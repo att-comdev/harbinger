@@ -7,7 +7,6 @@ from harbinger.images.image_manager import ImageManager
 
 
 class TestImageManager(unittest.TestCase):
-
     def _get_test_object(self):
         openstack_creds = {
             'auth_url': 'test_auth_url',
@@ -31,31 +30,32 @@ class TestImageManager(unittest.TestCase):
     @log_capture()
     def test___init__(self, capture):
         test_object = self._get_test_object()  # noqa: F841
-        capture.check(
-            ('harbinger.images.image_manager', 'INFO',
-             'Creating Glance client for test_label '
-             'using keystone: test_auth_url'),
-        )
+        capture.check(('harbinger.images.image_manager', 'INFO',
+                       'Creating Glance client for test_label '
+                       'using keystone: test_auth_url'), )
 
     @log_capture()
     def test_check_image(self, capture):
         test_object = self._get_test_object()
-        test_object.glance.images.list.side_effect = [
-            [{'name': 'test_image1'}, {'name': 'test_image2'}]
-        ]
+        test_object.glance.images.list.side_effect = [[{
+            'name': 'test_image1'
+        }, {
+            'name': 'test_image2'
+        }]]
         self.assertFalse(test_object.check_image('test_image_name'))
         capture.check_present(
             ('harbinger.images.image_manager', 'INFO',
-             'Image <test_image_name> exists in Glance: False'),
-        )
-        test_object.glance.images.list.side_effect = [
-            [{'name': 'test_image1'}, {'name': 'test_image_name'}]
-        ]
+             'Image <test_image_name> exists in Glance: False'), )
+        test_object.glance.images.list.side_effect = [[{
+            'name': 'test_image1'
+        }, {
+            'name':
+            'test_image_name'
+        }]]
         self.assertTrue(test_object.check_image('test_image_name'))
         capture.check_present(
             ('harbinger.images.image_manager', 'INFO',
-             'Image <test_image_name> exists in Glance: True'),
-        )
+             'Image <test_image_name> exists in Glance: True'), )
 
     @log_capture()
     def test_upload_image_success(self, capture):
@@ -75,11 +75,9 @@ class TestImageManager(unittest.TestCase):
                     test_object.glance.images.create.assert_called()
                     test_object.glance.images.upload.assert_called()
                     capture.check_present(
-                        ('harbinger.images.image_manager',
-                         'INFO',
+                        ('harbinger.images.image_manager', 'INFO',
                          'Uploading image <test_image_name> into Glance....'),
-                        ('harbinger.images.image_manager',
-                         'INFO',
+                        ('harbinger.images.image_manager', 'INFO',
                          'Image <test_image_name> uploaded into Glance'),
                     )
 
@@ -96,9 +94,10 @@ class TestImageManager(unittest.TestCase):
                                              'test_disk_format',
                                              'test_container_format')
                     exception = context.exception
-                    self.assertEqual(exception.message,
-                                     'Image upload error: test_image_name '
-                                     'could not be found in test_dir/images')
+                    self.assertEqual(
+                        exception.message,
+                        'Image upload error: test_image_name '
+                        'could not be found in test_dir/images')
 
     @log_capture()
     def test_upload_image_glance_error(self, capture):
@@ -121,12 +120,10 @@ class TestImageManager(unittest.TestCase):
                         test_object.glance.images.create.assert_called()
                         test_object.glance.images.upload.assert_called()
                         capture.check_present(
-                            ('harbinger.images.image_manager',
-                             'INFO',
+                            ('harbinger.images.image_manager', 'INFO',
                              'Uploading image <test_image_name> '
                              'into Glance....'),
-                            ('harbinger.images.image_manager',
-                             'ERROR',
+                            ('harbinger.images.image_manager', 'ERROR',
                              'Error connecting to Glance, check proxy and '
                              'no_proxy settings\ntest_exception'),
                         )

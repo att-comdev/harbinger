@@ -9,7 +9,6 @@ from harbinger.executors.yardstick import YardstickExecutor
 
 
 class TestYardstickExecutor(unittest.TestCase):
-
     def setUp(self):
         self.mock_framework = mock.Mock()
         self.mock_framework.name = 'test_framework_name'
@@ -36,10 +35,8 @@ class TestYardstickExecutor(unittest.TestCase):
                         with mock.patch.object(YardstickExecutor,
                                                'collect_tests'):
                             test_object = YardstickExecutor(
-                                self.mock_framework,
-                                self.mock_environment,
-                                self.mock_options
-                            )
+                                self.mock_framework, self.mock_environment,
+                                self.mock_options)
         test_object.image = mock.Mock()
         test_object.flavor = mock.Mock()
         test_object.config = mock.Mock()
@@ -49,17 +46,13 @@ class TestYardstickExecutor(unittest.TestCase):
         test_object = self._get_test_object()
         self.assertEqual(test_object.outputs_full_path,
                          'test_files_dir/outputs/yardstick.out')
-        self.assertEqual(test_object.inputs_dir,
-                         'test_files_dir/inputs')
-        self.assertEqual(test_object.relative_path,
-                         'test_files_dir/frameworks/'
-                         'test_framework_name/test_paths')
-        self.assertEqual(test_object.outputs_dir,
-                         'test_files_dir/outputs')
-        self.assertEqual(test_object.test_suite_name,
-                         'yardstick-suite.yaml')
-        self.assertEqual(test_object.test_paths,
-                         'test_paths')
+        self.assertEqual(test_object.inputs_dir, 'test_files_dir/inputs')
+        self.assertEqual(
+            test_object.relative_path, 'test_files_dir/frameworks/'
+            'test_framework_name/test_paths')
+        self.assertEqual(test_object.outputs_dir, 'test_files_dir/outputs')
+        self.assertEqual(test_object.test_suite_name, 'yardstick-suite.yaml')
+        self.assertEqual(test_object.test_paths, 'test_paths')
         self.assertEqual(test_object.conf_file_name,
                          'test_framework_name.conf')
         self.assertEqual(test_object.conf_full_path,
@@ -75,8 +68,7 @@ class TestYardstickExecutor(unittest.TestCase):
     def test_setup_positives(self, mock_base_setup, mock_hierarchy_lookup,
                              mock_source_openrc, mock_create_image,
                              mock_create_yardstick_conf,
-                             mock_create_test_suite,
-                             mock_exec_cmd):
+                             mock_create_test_suite, mock_exec_cmd):
         test_object = self._get_test_object()
         mock_hierarchy_lookup.side_effect = [
             'test_flavor_name', 'test_image_name'
@@ -89,9 +81,11 @@ class TestYardstickExecutor(unittest.TestCase):
         test_object.flavor.check_flavor.assert_called_once_with(
             'test_flavor_name')
         test_object.flavor.create_flavor.assert_called_once_with(
-            name='test_flavor_name', ram='512',
-            vcpus='1', disk='3', swap='100'
-        )
+            name='test_flavor_name',
+            ram='512',
+            vcpus='1',
+            disk='3',
+            swap='100')
         test_object.image.check_image.assert_called_once_with(
             'test_image_name')
         mock_create_image.assert_called_once()
@@ -105,8 +99,7 @@ class TestYardstickExecutor(unittest.TestCase):
             'yardstick --config-file test_files_dir/inputs/'
             'test_framework_name.conf task start --output-file '
             'test_files_dir/outputs/yardstick.out --suite '
-            'test_files_dir/inputs/yardstick-suite.yaml'
-        )
+            'test_files_dir/inputs/yardstick-suite.yaml')
 
     @mock.patch.object(YardstickExecutor, '_exec_cmd')
     @mock.patch.object(YardstickExecutor, 'create_test_suite')
@@ -142,20 +135,22 @@ class TestYardstickExecutor(unittest.TestCase):
             'yardstick --config-file test_files_dir/inputs/'
             'test_framework_name.conf task start --output-file '
             'test_files_dir/outputs/yardstick.out --suite '
-            'test_files_dir/inputs/yardstick-suite.yaml'
-        )
+            'test_files_dir/inputs/yardstick-suite.yaml')
 
     def test_format_collected_tests(self):
         test_object = self._get_test_object()
         tests = ['xtest1', 'xtest2', 'xtest3']
-        self.assertEqual(
-            test_object.format_collected_tests(tests),
-            [
-                {'file_name': 'test1'},
-                {'file_name': 'test2'},
-                {'file_name': 'test3'},
-            ]
-        )
+        self.assertEqual(test_object.format_collected_tests(tests), [
+            {
+                'file_name': 'test1'
+            },
+            {
+                'file_name': 'test2'
+            },
+            {
+                'file_name': 'test3'
+            },
+        ])
 
     @mock.patch('harbinger.common.utils.Utils.hierarchy_lookup')
     def test_create_test_suite_positive(self, mock_lookup):
@@ -167,13 +162,11 @@ class TestYardstickExecutor(unittest.TestCase):
         with mock.patch(open_name, mock_open, create=True):
             test_object.create_test_suite(test_list)
         handle = mock_open()
-        handle.write.assert_called_once_with(
-            'schema: test_schema\n'
-            'name: yardstick-suite.yaml\n'
-            'test_cases_dir: test_paths\n'
-            'test_cases:\n'
-            '- file_name: test1\n'
-        )
+        handle.write.assert_called_once_with('schema: test_schema\n'
+                                             'name: yardstick-suite.yaml\n'
+                                             'test_cases_dir: test_paths\n'
+                                             'test_cases:\n'
+                                             '- file_name: test1\n')
 
     @mock.patch('harbinger.common.utils.Utils.hierarchy_lookup')
     def test_create_test_suite_negative(self, mock_lookup):
@@ -185,13 +178,11 @@ class TestYardstickExecutor(unittest.TestCase):
         with mock.patch(open_name, mock_open, create=True):
             test_object.create_test_suite(test_list)
         handle = mock_open()
-        handle.write.assert_called_once_with(
-            'schema: test_schema\n'
-            'name: yardstick-suite.yaml\n'
-            'test_cases_dir: /\n'
-            'test_cases:\n'
-            '- file_name: test_paths/test1\n'
-        )
+        handle.write.assert_called_once_with('schema: test_schema\n'
+                                             'name: yardstick-suite.yaml\n'
+                                             'test_cases_dir: /\n'
+                                             'test_cases:\n'
+                                             '- file_name: test_paths/test1\n')
 
     def test_add_extras_options(self):
         test_object = self._get_test_object()
@@ -234,8 +225,7 @@ class TestYardstickExecutor(unittest.TestCase):
         ]
         test_object.config.set.assert_has_calls(calls)
         test_object.config.add_section.assert_called_once_with(
-            'dispatcher_file'
-        )
+            'dispatcher_file')
         test_object.config.write.assert_called_once()
 
     @mock.patch('harbinger.common.utils.Utils.source_openrc')
@@ -253,6 +243,5 @@ class TestYardstickExecutor(unittest.TestCase):
             'apt update && '
             'test_files_dir/frameworks/yardstick/tools/yardstick-img-modify '
             'test_files_dir/frameworks/yardstick/tools/'
-            'ubuntu-server-cloudimg-modify.sh'
-        )
+            'ubuntu-server-cloudimg-modify.sh')
         mock_source_openrc.assert_called_once_with(test_object)

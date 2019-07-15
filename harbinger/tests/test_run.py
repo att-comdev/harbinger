@@ -12,7 +12,6 @@ from harbinger.run import worker_init
 
 
 class TestRun(unittest.TestCase):
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.args.yaml_file = 'test_yaml'
@@ -77,8 +76,8 @@ class TestRun(unittest.TestCase):
     @mock.patch.object(Run, 'execute_serial')
     @mock.patch('harbinger.run.Core')
     @mock.patch.object(Run, 'load_yaml')
-    def test_begin_serial(self, mock_load_yaml,
-                          mock_core, mock_execute_serial):
+    def test_begin_serial(self, mock_load_yaml, mock_core,
+                          mock_execute_serial):
         self.test_object.directory_manager = mock.Mock()
         self.test_object.options = mock.Mock()
         self.test_object.options.execution_mode = 'serial'
@@ -90,8 +89,8 @@ class TestRun(unittest.TestCase):
     @mock.patch.object(Run, 'execute_parallel')
     @mock.patch('harbinger.run.Core')
     @mock.patch.object(Run, 'load_yaml')
-    def test_begin_parallel(self, mock_load_yaml,
-                            mock_core, mock_execute_parallel):
+    def test_begin_parallel(self, mock_load_yaml, mock_core,
+                            mock_execute_parallel):
         self.test_object.directory_manager = mock.Mock()
         self.test_object.options = mock.Mock()
         self.test_object.options.execution_mode = 'parallel'
@@ -102,23 +101,18 @@ class TestRun(unittest.TestCase):
 
     @mock.patch('harbinger.run.worker')
     def test_execute_serial(self, mock_worker):
-        self.test_object.frameworks_dict = {
-            'key': 'val'
-        }
+        self.test_object.frameworks_dict = {'key': 'val'}
         self.test_object.environment = 'test_env'
         self.test_object.options = 'test_options'
         self.test_object.execute_serial()
         mock_worker.assert_called_once_with(
-            ['key', 'val', 'test_env', 'test_options']
-        )
+            ['key', 'val', 'test_env', 'test_options'])
 
     @mock.patch('harbinger.run.worker_init', return_value='worker_id')
     @mock.patch('harbinger.run.multiprocessing.Pool')
     @mock.patch('harbinger.run.os.getpid', return_value='12345')
     def test_execute_parallel(self, mock_getpid, mock_pool, mock_worker_init):
-        self.test_object.frameworks_dict = {
-            'key': 'val'
-        }
+        self.test_object.frameworks_dict = {'key': 'val'}
         self.test_object.environment = 'test_env'
         self.test_object.options = 'test_options'
         self.test_object.execute_parallel()
@@ -130,8 +124,7 @@ class TestRun(unittest.TestCase):
     def test_loader(self, mock_load_class):
         loader('test', 'framework', 'environment', 'options')
         mock_load_class.assert_called_once_with(
-            'harbinger.executors.test.TestExecutor'
-        )
+            'harbinger.executors.test.TestExecutor')
 
     @log_capture()
     @mock.patch('harbinger.run.Process')
@@ -181,6 +174,4 @@ class TestRun(unittest.TestCase):
                 self.assertRaises(OSError, worker, ['test'])
         mock_loader.assert_called()
         mock_traceback.print_exc.assert_called()
-        capture.check(
-            ('harbinger.run', 'ERROR', 'test_string'),
-        )
+        capture.check(('harbinger.run', 'ERROR', 'test_string'), )

@@ -10,7 +10,6 @@ from harbinger.factory.framework import Framework
 
 class TestFramework(unittest.TestCase):
     """Unit tests for Framework"""
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
 
@@ -21,6 +20,6 @@ class TestFramework(unittest.TestCase):
         self.yaml_file = self.base_object.load_yaml(self.yaml)
 
     def test__init(self):
-        self.test_object = Framework(
-            self.yaml_file["Execute"]["framework_1"], "framework_1")
+        self.test_object = Framework(self.yaml_file["Execute"]["framework_1"],
+                                     "framework_1")
         self.assertEqual("framework_1", self.test_object.name)

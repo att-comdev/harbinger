@@ -10,7 +10,6 @@ from harbinger.factory.options import Options
 
 class TestOptions(unittest.TestCase):
     """Unit tests for Options"""
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.yaml = os.path.join(os.path.dirname(os.path.dirname(__file__)),

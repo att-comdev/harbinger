@@ -22,9 +22,8 @@ class ImageManager():
         auth = loader.load_from_options(**kwargs)
         session2 = session.Session(auth=auth)
 
-        LOG.info(
-            'Creating Glance client for %s using keystone: %s',
-            label, kwargs.pop('auth_url'))
+        LOG.info('Creating Glance client for %s using keystone: %s', label,
+                 kwargs.pop('auth_url'))
 
         self.glance = Client('2', session=session2)
 
@@ -38,7 +37,10 @@ class ImageManager():
         LOG.info('Image <%s> exists in Glance: %s', image_name, image_exists)
         return image_exists
 
-    def upload_image(self, image_name, disk_format, container_format,
+    def upload_image(self,
+                     image_name,
+                     disk_format,
+                     container_format,
                      image_path=None):
 
         if image_path is None:
@@ -67,5 +69,5 @@ class ImageManager():
 
             LOG.info('Image <%s> uploaded into Glance', image_name)
         else:
-            raise OSError('Image upload error: %s could not be found in %s' % (
-                image_name, image_path))
+            raise OSError('Image upload error: %s could not be found in %s' %
+                          (image_name, image_path))

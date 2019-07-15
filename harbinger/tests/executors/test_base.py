@@ -10,7 +10,6 @@ from harbinger.executors.base import BaseExecutor
 
 
 class TestBaseExecutor(unittest.TestCase):
-
     def setUp(self):
         self.mock_framework = mock.Mock()
         self.mock_framework.name = 'test_framework_name'
@@ -28,20 +27,18 @@ class TestBaseExecutor(unittest.TestCase):
                 mock_lookup.return_value = 'test_paths'
                 with mock.patch('harbinger.executors.base.FlavorManager'):
                     with mock.patch('harbinger.executors.base.ImageManager'):
-                        test_object = BaseExecutor(
-                            self.mock_framework,
-                            self.mock_environment,
-                            self.mock_options
-                        )
+                        test_object = BaseExecutor(self.mock_framework,
+                                                   self.mock_environment,
+                                                   self.mock_options)
             return test_object
 
     def test___init__(self):
         test_object = self._get_test_object()
         self.assertEqual(test_object.inputs_dir, 'test_files_dir/inputs')
         self.assertEqual(test_object.outputs_dir, 'test_files_dir/outputs')
-        self.assertEqual(test_object.relative_path,
-                         'test_files_dir/frameworks/'
-                         'test_framework_name/test_paths')
+        self.assertEqual(
+            test_object.relative_path, 'test_files_dir/frameworks/'
+            'test_framework_name/test_paths')
 
     @mock.patch.object(BaseExecutor, 'export_environment')
     def test_setup(self, mock_export_environment):
@@ -89,9 +86,7 @@ class TestBaseExecutor(unittest.TestCase):
     @log_capture()
     @mock.patch('subprocess.Popen')
     def test__exec_cmd(self, mock_popen_init, capture):
-
         class TestReadline():
-
             def __init__(self):
                 self.called = False
 
@@ -114,9 +109,9 @@ class TestBaseExecutor(unittest.TestCase):
             with self.assertRaises(RuntimeError) as context:
                 test_object._exec_cmd('test_command')
             exception = context.exception
-            self.assertEqual(str(exception),
-                             'command <test_command> '
-                             'failed with return code -1')
+            self.assertEqual(
+                str(exception), 'command <test_command> '
+                'failed with return code -1')
             mock_popen_init.assert_called_once_with(
                 [
                     '/bin/bash', '-c',
@@ -130,8 +125,7 @@ class TestBaseExecutor(unittest.TestCase):
             capture.check(
                 ('harbinger.executors.base', 'INFO',
                  'Executing {test_command}:\n'),
-                ('harbinger.executors.base', 'INFO',
-                 'test_log_output'),
+                ('harbinger.executors.base', 'INFO', 'test_log_output'),
             )
 
             mock_popen.returncode = 0

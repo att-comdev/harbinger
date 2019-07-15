@@ -9,7 +9,6 @@ from harbinger.scaffold import Scaffold
 
 
 class TestScaffold(unittest.TestCase):
-
     def setUp(self):
         args = mock.Mock(spec=argparse.Namespace)
         args.framework = 'test_framework'
@@ -34,8 +33,7 @@ class TestScaffold(unittest.TestCase):
     @mock.patch('os.path.dirname', return_value='test_path')
     def test_take_action(self, mock_dirname, mock_cfg_parser,
                          mock_add_framework_section,
-                         mock_create_framework_dirs,
-                         mock_create_venv_dirs,
+                         mock_create_framework_dirs, mock_create_venv_dirs,
                          mock_create_executor_file):
         parsed_args = mock.Mock(spec=argparse.Namespace)
         parsed_args.framework = 'test_framework'
@@ -86,8 +84,8 @@ class TestScaffold(unittest.TestCase):
     @log_capture()
     @mock.patch('harbinger.scaffold.CONF')
     @mock.patch('os.makedirs')
-    def test_create_framework_dirs_exception(self, mock_makedirs,
-                                             mock_conf, capture):
+    def test_create_framework_dirs_exception(self, mock_makedirs, mock_conf,
+                                             capture):
         mock_conf.DEFAULT.files_dir = 'test_dir'
         mock_makedirs.side_effect = Exception()
         self.test_object.create_framework_directories()
@@ -104,14 +102,13 @@ class TestScaffold(unittest.TestCase):
     def test_create_venv_dirs(self, mock_makedirs, mock_conf):
         mock_conf.DEFAULT.files_dir = 'test_dir'
         self.test_object.create_venv_directories()
-        mock_makedirs.assert_called_once_with(
-            'test_dir/venvs/test_framework')
+        mock_makedirs.assert_called_once_with('test_dir/venvs/test_framework')
 
     @log_capture()
     @mock.patch('harbinger.scaffold.CONF')
     @mock.patch('os.makedirs')
-    def test_create_venvs_dirs_exception(self, mock_makedirs,
-                                         mock_conf, capture):
+    def test_create_venvs_dirs_exception(self, mock_makedirs, mock_conf,
+                                         capture):
         mock_conf.DEFAULT.files_dir = 'test_dir'
         mock_makedirs.side_effect = Exception()
         self.test_object.create_venv_directories()

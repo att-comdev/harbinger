@@ -7,7 +7,6 @@ from harbinger.executors.shaker import ShakerExecutor
 
 
 class TestShakerExecutor(unittest.TestCase):
-
     def setUp(self):
         self.mock_framework = mock.Mock()
         self.mock_framework.name = 'test_framework_name'
@@ -27,11 +26,9 @@ class TestShakerExecutor(unittest.TestCase):
                 with mock.patch.object(ShakerExecutor,
                                        'format_collected_tests'):
                     with mock.patch.object(ShakerExecutor, 'collect_tests'):
-                        test_object = ShakerExecutor(
-                            self.mock_framework,
-                            self.mock_environment,
-                            self.mock_options
-                        )
+                        test_object = ShakerExecutor(self.mock_framework,
+                                                     self.mock_environment,
+                                                     self.mock_options)
         test_object.image = mock.Mock()
         test_object.config = mock.Mock()
         return test_object
@@ -39,8 +36,7 @@ class TestShakerExecutor(unittest.TestCase):
     def test___init__(self):
         test_object = self._get_test_object()
 
-        self.assertEqual(test_object.cfg_file_name,
-                         'test_framework_name.cfg')
+        self.assertEqual(test_object.cfg_file_name, 'test_framework_name.cfg')
         self.assertEqual(test_object.cfg_full_path,
                          'test_files_dir/inputs/test_framework_name.cfg')
         self.assertEqual(test_object.results_json_path,
@@ -53,8 +49,7 @@ class TestShakerExecutor(unittest.TestCase):
                 return_value='test_image')
     @mock.patch('harbinger.executors.base.BaseExecutor.setup')
     def test_setup(self, mock_base_setup, mock_hierarchy_lookup,
-                   mock_create_image, mock_create_cfg_file,
-                   mock_exec_cmd):
+                   mock_create_image, mock_create_cfg_file, mock_exec_cmd):
         test_object = self._get_test_object()
         test_object.image.check_image = mock.Mock(return_value=False)
         test_object.image.upload_image = mock.Mock()
@@ -64,20 +59,17 @@ class TestShakerExecutor(unittest.TestCase):
         mock_hierarchy_lookup.assert_called_once_with(test_object, 'image')
         mock_create_image.assert_called_once()
         test_object.image.upload_image.assert_called_once_with(
-            'test_image', 'qcow2', 'bare'
-        )
+            'test_image', 'qcow2', 'bare')
         mock_create_cfg_file.assert_called_once()
         mock_exec_cmd.assert_called_once_with(
             "shaker --config-file test_files_dir/"
-            "inputs/test_framework_name.cfg"
-        )
+            "inputs/test_framework_name.cfg")
 
         test_object.image.check_image = mock.Mock(return_value=True)
         test_object.setup()
         mock_create_image.assert_called_once()
         test_object.image.upload_image.assert_called_once_with(
-            'test_image', 'qcow2', 'bare'
-        )
+            'test_image', 'qcow2', 'bare')
 
     def test_add_extras_values(self):
         test_object = self._get_test_object()
@@ -97,10 +89,8 @@ class TestShakerExecutor(unittest.TestCase):
     def test_format_collected_tests(self):
         test_object = self._get_test_object()
         tests = ['test1', 'test2', 'test3']
-        self.assertEqual(
-            test_object.format_collected_tests(tests),
-            "test1, test2, test3, "
-        )
+        self.assertEqual(test_object.format_collected_tests(tests),
+                         "test1, test2, test3, ")
 
     @mock.patch.object(ShakerExecutor, 'add_extras_options')
     def test_create_cfg_file(self, mock_add_extras_options):

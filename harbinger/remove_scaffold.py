@@ -26,21 +26,22 @@ class RemoveScaffold(base.Base):
 
     def get_parser(self, prog_name):
         parser = super(RemoveScaffold, self).get_parser(prog_name)
-        parser.add_argument('framework',
-                            metavar='<framework name>',
-                            default='',
-                            help=('Lists the tests available '
-                                  'for the specified framework'),
-                            )
+        parser.add_argument(
+            'framework',
+            metavar='<framework name>',
+            default='',
+            help=('Lists the tests available '
+                  'for the specified framework'),
+        )
 
         return parser
 
     def take_action(self, parsed_args):
         self.app_args.framework = parsed_args.framework
         self.app_args.framework_file = parsed_args.framework + ".py"
-        self.executor_path = os.path.join(
-            os.path.dirname(__file__), "executors",
-            self.app_args.framework_file)
+        self.executor_path = os.path.join(os.path.dirname(__file__),
+                                          "executors",
+                                          self.app_args.framework_file)
         self.harbinger_cfg_path = os.path.join(os.path.dirname(__file__),
                                                "etc/harbinger.cfg")
         self.config = configparser.RawConfigParser()
@@ -70,8 +71,8 @@ class RemoveScaffold(base.Base):
 
     def delete_framework_directories(self):
         LOG.info('Deleting framework directory %s', self.app_args.framework)
-        full_path = os.path.join(
-            CONF.DEFAULT.files_dir, "frameworks", self.app_args.framework)
+        full_path = os.path.join(CONF.DEFAULT.files_dir, "frameworks",
+                                 self.app_args.framework)
         try:
             shutil.rmtree(full_path)
         except Exception:
@@ -79,8 +80,8 @@ class RemoveScaffold(base.Base):
 
     def delete_venv_directories(self):
         LOG.info('Deleting venvs directory %s', self.app_args.framework)
-        full_path = os.path.join(
-            CONF.DEFAULT.files_dir, "venvs", self.app_args.framework)
+        full_path = os.path.join(CONF.DEFAULT.files_dir, "venvs",
+                                 self.app_args.framework)
         try:
             shutil.rmtree(full_path)
         except Exception:

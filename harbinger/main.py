@@ -37,17 +37,16 @@ class Harbinger(App):
             command_manager=CommandManager('harbinger.commands'),
             deferred_help=True,
             description='Manager for Data Plane Testing Frameworks',
-            version=__version__
-        )
+            version=__version__)
 
     def configure_logging(self):
         root_logger = consoleLogging.getLogger('')
         console = consoleLogging.StreamHandler(self.stdout)
-        console_level = {0: consoleLogging.WARNING,
-                         1: consoleLogging.INFO,
-                         2: consoleLogging.DEBUG,
-                         }.get(self.options.verbose_level,
-                               consoleLogging.INFO)
+        console_level = {
+            0: consoleLogging.WARNING,
+            1: consoleLogging.INFO,
+            2: consoleLogging.DEBUG,
+        }.get(self.options.verbose_level, consoleLogging.INFO)
         console.setLevel(console_level)
         console.setFormatter(ColorLogFormatter())
         root_logger.addHandler(console)

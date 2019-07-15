@@ -10,7 +10,6 @@ from harbinger import base
 
 class TestBase(unittest.TestCase):
     """Unit tests for Base"""
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.yaml_file = os.path.join(os.path.dirname(__file__),

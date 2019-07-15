@@ -2,53 +2,32 @@ import logging
 import os
 
 ATTRIBUTES = dict(
-    list(zip([
-        'bold',
-        'dark',
-        '',
-        'underline',
-        'blink',
-        '',
-        'reverse',
-        'concealed'
-        ],
-        list(range(1, 9))
-        ))
-    )
+    list(
+        zip([
+            'bold', 'dark', '', 'underline', 'blink', '', 'reverse',
+            'concealed'
+        ], list(range(1, 9)))))
 del ATTRIBUTES['']
 
-
 HIGHLIGHTS = dict(
-    list(zip([
-        'on_grey',
-        'on_red',
-        'on_green',
-        'on_yellow',
-        'on_blue',
-        'on_magenta',
-        'on_cyan',
-        'on_white'
-        ],
-        list(range(40, 48))
-        ))
-    )
-
+    list(
+        zip([
+            'on_grey', 'on_red', 'on_green', 'on_yellow', 'on_blue',
+            'on_magenta', 'on_cyan', 'on_white'
+        ], list(range(40, 48)))))
 
 COLORS = dict(
-    list(zip([
-        'grey',
-        'red',
-        'green',
-        'yellow',
-        'blue',
-        'magenta',
-        'cyan',
-        'white',
-        ],
-        list(range(30, 38))
-        ))
-    )
-
+    list(
+        zip([
+            'grey',
+            'red',
+            'green',
+            'yellow',
+            'blue',
+            'magenta',
+            'cyan',
+            'white',
+        ], list(range(30, 38)))))
 
 RESET = '\033[0m'
 DEFAULT_FMT = ('%(asctime)s.%(msecs)03d %(processName)s ' +
@@ -103,7 +82,8 @@ class ColorLogFormatter(logging.Formatter):
             self._fmt = DEFAULT_FMT
             color = self.level_colors.get(record.levelno, 'white')
             record.color = color
-            record.levelname = self.colored(record.levelname, color,
+            record.levelname = self.colored(record.levelname,
+                                            color,
                                             attrs=['bold'])
             record.name = self.colored(record.name, 'red')
             record.message = self.colored(record.getMessage(), color)

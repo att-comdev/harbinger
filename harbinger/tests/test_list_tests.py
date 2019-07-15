@@ -9,7 +9,6 @@ from harbinger.list_tests import ListTests
 
 
 class TestListTests(unittest.TestCase):
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.args.framework = 'test_framework'
@@ -41,8 +40,7 @@ class TestListTests(unittest.TestCase):
         mock_setup_tables.assert_called_once()
         mock_list_framework_tests.assert_called_once()
         capture.check(
-            ('harbinger.list_tests', 'INFO', 'test_framework tests:\n'),
-        )
+            ('harbinger.list_tests', 'INFO', 'test_framework tests:\n'), )
 
     @mock.patch('harbinger.list_tests.CONF')
     def test_get_test_paths(self, mock_conf):
@@ -96,20 +94,22 @@ class TestListTests(unittest.TestCase):
                                "+-------------------+\n"
                                "+-------------------+")
 
-        expected = [long_even_expected,
-                    short_odd_expected1,
-                    short_even_expected1]
-        self.test_object.test_paths = ['long_path_even_len',
-                                       'short_odd', 'short_even']
+        expected = [
+            long_even_expected, short_odd_expected1, short_even_expected1
+        ]
+        self.test_object.test_paths = [
+            'long_path_even_len', 'short_odd', 'short_even'
+        ]
         actuals = self.test_object.setup_tables()
         for actual, expected in zip(actuals, expected):
             self.assertEqual(str(actual), expected)
 
-        expected = [long_odd_expected,
-                    short_odd_expected2,
-                    short_even_expected2]
-        self.test_object.test_paths = ['long_path_odd_len',
-                                       'short_odd', 'short_even']
+        expected = [
+            long_odd_expected, short_odd_expected2, short_even_expected2
+        ]
+        self.test_object.test_paths = [
+            'long_path_odd_len', 'short_odd', 'short_even'
+        ]
         actuals = self.test_object.setup_tables()
         for actual, expected in zip(actuals, expected):
             self.assertEqual(str(actual), expected)
@@ -118,8 +118,8 @@ class TestListTests(unittest.TestCase):
     @mock.patch('sys.stdout', autospec=True)
     @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
-    def test_list_framework_tests(self, mock_isdir, mock_listdir,
-                                  mock_print, capture):
+    def test_list_framework_tests(self, mock_isdir, mock_listdir, mock_print,
+                                  capture):
         mock_isdir.side_effect = [True, False]
         mock_listdir.return_value = ['test_filename']
         self.test_object.test_paths = ['first_test_path', 'second_test_path']
@@ -137,8 +137,6 @@ class TestListTests(unittest.TestCase):
         ]
         mock_print.assert_has_calls(calls)
 
-        capture.check(
-            ('harbinger.list_tests', 'ERROR',
-             "tests path second_test_path does not exist. framework "
-             "provided may not be a supported framework."),
-        )
+        capture.check(('harbinger.list_tests', 'ERROR',
+                       "tests path second_test_path does not exist. framework "
+                       "provided may not be a supported framework."), )

@@ -10,7 +10,6 @@ from harbinger.factory.environment import Environment
 
 class TestEnvironment(unittest.TestCase):
     """Unit tests for Environment"""
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.yaml = os.path.join(os.path.dirname(os.path.dirname(__file__)),

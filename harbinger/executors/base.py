@@ -27,8 +27,8 @@ class BaseExecutor():
         self.environment = environment
         self.options = options
         self.relative_path = os.path.join(
-            CONF.DEFAULT.files_dir, "frameworks",
-            self.framework.name, Utils.hierarchy_lookup(self, "test_paths"))
+            CONF.DEFAULT.files_dir, "frameworks", self.framework.name,
+            Utils.hierarchy_lookup(self, "test_paths"))
 
         auth_url = self.environment.OS_AUTH_URL + \
             self.environment.OS_API_VERSION
@@ -36,20 +36,26 @@ class BaseExecutor():
         client_label = self.framework.name
 
         openstack_creds = {
-            'auth_url': auth_url,
-            'user_id': getattr(self.options, 'user_id', None),
-            'username': getattr(self.options, 'username', None),
-            'password': getattr(self.options, 'password', None),
-            'user_domain_id': getattr(self.options,
-                                      'user_domain_id', None),
-            'user_domain_name': getattr(self.options,
-                                        'user_domain_name', None),
-            'project_id': getattr(self.options, 'project_id', None),
-            'project_name': getattr(self.options, 'project_name', None),
-            'project_domain_id': getattr(self.options,
-                                         'project_domain_id', None),
-            'project_domain_name': getattr(self.options,
-                                           'project_domain_name', None)
+            'auth_url':
+            auth_url,
+            'user_id':
+            getattr(self.options, 'user_id', None),
+            'username':
+            getattr(self.options, 'username', None),
+            'password':
+            getattr(self.options, 'password', None),
+            'user_domain_id':
+            getattr(self.options, 'user_domain_id', None),
+            'user_domain_name':
+            getattr(self.options, 'user_domain_name', None),
+            'project_id':
+            getattr(self.options, 'project_id', None),
+            'project_name':
+            getattr(self.options, 'project_name', None),
+            'project_domain_id':
+            getattr(self.options, 'project_domain_id', None),
+            'project_domain_name':
+            getattr(self.options, 'project_domain_name', None)
         }
 
         self.image = ImageManager(client_label, **openstack_creds)
@@ -93,15 +99,14 @@ class BaseExecutor():
                            '"source {}venvs/{}/bin/activate' \
                            ' && {}"'
 
-        execute = shlex.split(command_template.format(CONF.DEFAULT.files_dir,
-                                                      self.framework.name,
-                                                      command))
+        execute = shlex.split(
+            command_template.format(CONF.DEFAULT.files_dir,
+                                    self.framework.name, command))
 
-        popen = subprocess.Popen(
-            execute,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True)
+        popen = subprocess.Popen(execute,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT,
+                                 universal_newlines=True)
 
         for stdout_line in iter(popen.stdout.readline, ""):
             LOG.info(stdout_line.rstrip(), extra={'plainOutput': True})
@@ -110,8 +115,8 @@ class BaseExecutor():
         return_code = popen.returncode
 
         if return_code != 0:
-            raise RuntimeError('command <%s> failed with return code %s' % (
-                command, return_code))
+            raise RuntimeError('command <%s> failed with return code %s' %
+                               (command, return_code))
 
         return output
 
@@ -177,9 +182,8 @@ class BaseExecutor():
                 '%s' % invalid_schema_value)
 
         if len(bad_test_list) > 0:
-            raise RuntimeError(
-                'There are one or more tests, test paths,'
-                ' or directories that do not exist or have'
-                ' invalid extensions:\n%s' % bad_test_list)
+            raise RuntimeError('There are one or more tests, test paths,'
+                               ' or directories that do not exist or have'
+                               ' invalid extensions:\n%s' % bad_test_list)
 
         return test_list

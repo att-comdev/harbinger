@@ -33,14 +33,13 @@ def harbingeropts(harbinger_config_file):
     config = ConfigObj(harbinger_config_file)
     group_variables = {}
     for section in config.sections:
-        group_variables[section.upper() + '_GROUP'] = cfg.OptGroup(
-            name=section)
+        group_variables[section.upper() +
+                        '_GROUP'] = cfg.OptGroup(name=section)
         group_opts = config[section]
         opt_list = []
         for item in group_opts:
             opt_list.append(cfg.StrOpt(item))
-        OPTS.append(
-            (group_variables[section.upper() + '_GROUP'], opt_list))
+        OPTS.append((group_variables[section.upper() + '_GROUP'], opt_list))
         group_variables.clear()
 
     args = ['--config-file', harbinger_config_file]
@@ -72,10 +71,11 @@ class Base(Command):
 class CommandBase(Base):
     def get_parser(self, prog_name):
         parser = super(CommandBase, self).get_parser(prog_name)
-        parser.add_argument('yaml',
-                            metavar='<yaml>',
-                            default='',
-                            help=('Location of the yaml config file '
-                                  'to create relevant cfgs'),
-                            )
+        parser.add_argument(
+            'yaml',
+            metavar='<yaml>',
+            default='',
+            help=('Location of the yaml config file '
+                  'to create relevant cfgs'),
+        )
         return parser

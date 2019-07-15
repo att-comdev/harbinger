@@ -24,8 +24,7 @@ class Utils():
         modulename = '.'.join(splitted_path[:-1])
         classname = splitted_path[-1]
         try:
-            module = __import__(modulename, globals(), locals(),
-                                [classname])
+            module = __import__(modulename, globals(), locals(), [classname])
         except ImportError:
             # properly log the exception information and return None
             # to tell caller we did not succeed
@@ -76,8 +75,7 @@ class Utils():
 
         # ensure the "optional" fields in input yaml have a default value
         # to prevent any errors in lookup
-        hierarchy = (CONF[executor.framework.name],
-                     executor.options,
+        hierarchy = (CONF[executor.framework.name], executor.options,
                      executor.framework.options_override
                      if 'options_override' in vars(executor.framework) else {},
                      executor.framework.extras
@@ -113,10 +111,8 @@ class Utils():
          variables are specified in the input yaml and enforced via the schema
          so they should already be set.
          """
-        os.environ['OS_USERNAME'] = cls.hierarchy_lookup(
-            executor, 'username')
-        os.environ['OS_PASSWORD'] = cls.hierarchy_lookup(
-            executor, 'password')
+        os.environ['OS_USERNAME'] = cls.hierarchy_lookup(executor, 'username')
+        os.environ['OS_PASSWORD'] = cls.hierarchy_lookup(executor, 'password')
         os.environ['OS_PROJECT_NAME'] = cls.hierarchy_lookup(
             executor, 'project_name')
         os.environ['EXTERNAL_NETWORK'] = cls.hierarchy_lookup(

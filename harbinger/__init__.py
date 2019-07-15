@@ -14,6 +14,4 @@
 
 import pbr.version
 
-
-__version__ = pbr.version.VersionInfo(
-    'harbinger').version_string()
+__version__ = pbr.version.VersionInfo('harbinger').version_string()

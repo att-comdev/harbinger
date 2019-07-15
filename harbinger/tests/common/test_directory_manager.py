@@ -9,7 +9,6 @@ from harbinger.common.directory_manager import \
 
 
 class TestDirectoryManager(unittest.TestCase):
-
     def setUp(self):
         self.args = mock.Mock(spec=argparse.Namespace)
         self.test_object = DirectoryManager()
@@ -40,9 +39,7 @@ class TestDirectoryManager(unittest.TestCase):
     def test_archive_outputs(self, mock_os):
         self.test_object.setup()
 
-        mock_os.walk.return_value = [
-            ('.', ['dir1'], ['file1'])
-        ]
+        mock_os.walk.return_value = [('.', ['dir1'], ['file1'])]
 
         with mock.patch("builtins.open",
                         mock.mock_open(read_data="data")) as mock_file:

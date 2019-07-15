@@ -23,7 +23,6 @@ from harbinger.tests import base
 
 
 class TestMain(base.TestCase):
-
     @mock.patch('harbinger.main.CommandManager')
     @mock.patch('harbinger.main.App.__init__', autospec=True)
     @mock.patch('harbinger.main.__version__', 'version')
@@ -50,8 +49,7 @@ class TestMain(base.TestCase):
         mock_command_manager_class.assert_called_once_with(
             'harbinger.commands')
 
-    @mock.patch('harbinger.main.Harbinger',
-                spec=main.Harbinger)
+    @mock.patch('harbinger.main.Harbinger', spec=main.Harbinger)
     @mock.patch('harbinger.main.harbingeropts')
     @mock.patch('harbinger.main.logging.setup')
     def test_main(self, mock_logging, mock_harbingeropts, mock_main_class):
@@ -62,9 +60,8 @@ class TestMain(base.TestCase):
 
         self.assertEqual(main.main(['first', 'second', 'third']), 17)
 
-        mock_main_class.return_value.run.assert_called_once_with(['first',
-                                                                  'second',
-                                                                  'third'])
+        mock_main_class.return_value.run.assert_called_once_with(
+            ['first', 'second', 'third'])
 
     def test_harbingeropts_success(self):
         cfg = os.path.dirname(os.path.realpath(__file__)) + \
@@ -86,8 +83,7 @@ class TestMain(base.TestCase):
             main.Harbinger().clean_up(mock_cmd, 0, None)
             capture.check(
                 # mock_cmd.__class__.__name__ will be 'MagicMock'
-                ('harbinger.main', 'DEBUG', 'Cleaning Up MagicMock'),
-            )
+                ('harbinger.main', 'DEBUG', 'Cleaning Up MagicMock'), )
 
     @mock.patch('harbinger.main.CommandManager')
     def test_cleanup_err(self, mock_cmd):

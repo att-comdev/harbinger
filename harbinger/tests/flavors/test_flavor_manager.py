@@ -9,7 +9,6 @@ from harbinger.flavors.flavor_manager import FlavorManager
 
 
 class TestFlavorManager(unittest.TestCase):
-
     def setUp(self):
         self.openstack_creds = {
             'auth_url': 'test_auth_url',
@@ -32,11 +31,9 @@ class TestFlavorManager(unittest.TestCase):
         with mock.patch('harbinger.flavors.flavor_manager.FlavorManager'):
             FlavorManager("framework", **self.openstack_creds)
 
-            capture.check_present(
-                ('harbinger.flavors.flavor_manager', 'INFO',
-                 'Creating Nova client for framework '
-                 'using keystone: test_auth_url')
-            )
+            capture.check_present(('harbinger.flavors.flavor_manager', 'INFO',
+                                   'Creating Nova client for framework '
+                                   'using keystone: test_auth_url'))
 
     @log_capture()
     def test_check_flavor(self, capture):
@@ -54,23 +51,19 @@ class TestFlavorManager(unittest.TestCase):
         self.assertFalse(self.test_object.check_flavor('f10'))
         self.assertFalse(self.test_object.check_flavor('f38439'))
 
-        capture.check(
-            ('harbinger.flavors.flavor_manager',
-             'INFO', 'Flavor <f1> exists: True'),
-            ('harbinger.flavors.flavor_manager',
-             'INFO', 'Flavor <f6> exists: True'),
-            ('harbinger.flavors.flavor_manager',
-             'INFO', 'Flavor <f10> exists: False'),
-            ('harbinger.flavors.flavor_manager',
-             'INFO', 'Flavor <f38439> exists: False')
-        )
+        capture.check(('harbinger.flavors.flavor_manager', 'INFO',
+                       'Flavor <f1> exists: True'),
+                      ('harbinger.flavors.flavor_manager', 'INFO',
+                       'Flavor <f6> exists: True'),
+                      ('harbinger.flavors.flavor_manager', 'INFO',
+                       'Flavor <f10> exists: False'),
+                      ('harbinger.flavors.flavor_manager', 'INFO',
+                       'Flavor <f38439> exists: False'))
 
     @log_capture()
     def test_create_flavor(self, capture):
         self.test_object.nova = mock.MagicMock(autospec=True)
         self.test_object.create_flavor('f1', '2048', '4', '1')
         capture.check(
-            ('harbinger.flavors.flavor_manager', 'INFO',
-             'Creating flavor f1')
-        )
+            ('harbinger.flavors.flavor_manager', 'INFO', 'Creating flavor f1'))
         self.test_object.nova.flavors.create.assert_called_once()

@@ -24,12 +24,13 @@ class ListTests(base.Base):
 
     def get_parser(self, prog_name):
         parser = super(ListTests, self).get_parser(prog_name)
-        parser.add_argument('framework',
-                            metavar='<framework name>',
-                            default='',
-                            help=('Lists the tests available '
-                                  'for the specified framework'),
-                            )
+        parser.add_argument(
+            'framework',
+            metavar='<framework name>',
+            default='',
+            help=('Lists the tests available '
+                  'for the specified framework'),
+        )
 
         return parser
 
@@ -50,9 +51,11 @@ class ListTests(base.Base):
         result = []
 
         for path in test_paths:
-            result += [x[0] for x in os.walk(
-                os.path.join(CONF.DEFAULT.files_dir, "frameworks",
-                             self.app_args.framework, path))]
+            result += [
+                x[0] for x in os.walk(
+                    os.path.join(CONF.DEFAULT.files_dir, "frameworks",
+                                 self.app_args.framework, path))
+            ]
 
         return sorted(result)
 
@@ -73,8 +76,8 @@ class ListTests(base.Base):
 
             table = PrettyTable([path])
             if path != longest_path:
-                table.padding_width = int(((longest_path_length - len(
-                    path)) / 2) + 1)
+                table.padding_width = int((
+                    (longest_path_length - len(path)) / 2) + 1)
             test_tables.append(table)
 
         return test_tables
@@ -86,8 +89,9 @@ class ListTests(base.Base):
                     if self.tests_format in filename:
                         self.test_tables[i].add_row([filename])
             else:
-                LOG.error("tests path %s does not exist. framework provided"
-                          " may not be a supported framework.", path)
+                LOG.error(
+                    "tests path %s does not exist. framework provided"
+                    " may not be a supported framework.", path)
         for table in self.test_tables:
             if len(table._rows) > 0:
                 print(table)
