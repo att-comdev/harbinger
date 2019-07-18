@@ -10,7 +10,7 @@ Execute:
         tests:
             - openstack/perf_l2.yaml
         required:
-            server_endpoint: {IP: 'where this is executing'}
+            server_endpoint: '{IP:port where this is executing}'
         extras:
             debug: true
             agent_join_timeout: 30
