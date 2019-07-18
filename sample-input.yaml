@@ -1,30 +1,26 @@
-# Sample Harbinger standardized YAML input file
-
 Options:
-  project: { openstack project name }
-  username: { openstack user }
-  password: {openstack password }
-  external_network: {external network defined in openstack }
-  execution_mode: parallel
+    project: '{ openstack project name }'
+    username: '{ openstack user }'
+    password: '{openstack password }'
+    external_network: '{external network defined in openstack }'
+    execution_mode: parallel
 
 Execute:
-  shaker:
-    tests:
-      - openstack/perf_l2.yaml
-    required:
-      server_endpoint: {IP where this is executing}:8080
-    extras:
-      debug: true
-      agent_join_timeout: 30
-
-  yardstick:
-    tests:
-      - ping.yaml
-    required:
-      {}
+    shaker:
+        tests:
+            - openstack/perf_l2.yaml
+        required:
+            server_endpoint: {IP: 'where this is executing'}
+        extras:
+            debug: true
+            agent_join_timeout: 30
+    yardstick:
+        tests:
+            - ping.yaml
+        required: {}
 
 Environment:
-  OS_AUTH_URL: { keystone api url }
-  OS_REGION_NAME: { openstack region }
-  OS_API_VERSION: { keystone api version }
-
+    OS_AUTH_URL: '{ keystone api url }'
+    OS_REGION_NAME: '{ openstack region }'
+    OS_API_VERSION: '{ keystone api version }'
+    OS_INTERFACE: public
